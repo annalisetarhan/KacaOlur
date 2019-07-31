@@ -2,7 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable name="order" type="com.annalisetarhan.kacaolur.ordering.Order"/>
+        <variable name="item_name_var" type="String"/>
+        <variable name="item_description_var" type="String"/>
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,11 +33,11 @@
                 android:layout_height="wrap_content" android:id="@+id/bid_list_instructions"
                 android:textAlignment="center"/>
         <TextView
-                android:text="@{String.format(@string/item_name_header, item_name)}"
+                android:text="{String.format(@string/item_name_header, itemNameVar)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/item_name_textview"/>
         <TextView
-                android:text="@{String.format(@string/item_description_header, item_description)}"
+                android:text="{String.format(@string/item_description_header, itemDescriptionVar)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/item_description_textview"/>
     </LinearLayout>
@@ -52,5 +53,5 @@
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
-        <!--android:text="@{String.format(@string/item_name_header, item_name)}"
-        android:text="@{String.format(@string/item_description_header, item_description)}"-->
+        <!--android:text="{String.format(@string/item_name_header, itemNameVar)}"
+        android:text="{String.format(@string/item_description_header, itemDescriptionVar)}"-->

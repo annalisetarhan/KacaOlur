@@ -36,7 +36,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-
     // KTX
     implementation 'androidx.core:core-ktx:1.0.1'
 
@@ -61,4 +60,7 @@ dependencies {
 
     // ViewModel Kotlin support
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.archLifecycleVersion"
+
+    // For some reason this lets me use by viewModels
+    implementation "androidx.fragment:fragment-ktx:1.1.0-rc03"
 }
