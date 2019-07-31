@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="8dp"
+              android:background="@drawable/bid_list_border">
+
+        <TextView
+                android:text="@string/courier_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/courier_name"/>
+        <TextView
+                android:text="@{String.format(@string/delivery_price_header, delivery_price_var)}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/delivery_price"/>
+        <TextView
+                android:text="@string/delivery_time_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/delivery_time"/>
+        <Button
+                android:text="@string/accept_bid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" android:id="@+id/accept_bid_button"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
+
+<!--android:text="@string/delivery_price_header"-->

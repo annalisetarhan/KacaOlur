@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Kaca Olur</string>
+    <string name="new_order">Yeni Siparış</string>
+    <string name="what_do_you_need">Ne lazım?</string>
+    <string name="item_description">Size? Brand? From a particular store?</string>
+    <string name="attach_picture_button">"Attach Picture\n(optional)"</string>
+    <string name="kaca_olur">Kaça Olur?</string>
+    <string name="request_received">Request Received</string>
+    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"
+    </string>
+    <string name="item_name_header">Item name: %s </string>
+    <string name="item_description_header">Item Description: %s </string>
+    <string name="courier_name">%s</string>
+    <string name="delivery_price_header">Delivery Price: %d lira</string>
+    <string name="delivery_time_header">Delivery Time: %d minutes</string>
+    <string name="accept_bid">Accept Bid</string>
+    <string name="question_header">Question: %s </string>
+    <string name="answer_question_button">Answer</string>
+    <string name="bid_question_answer"> %s </string>
+    <string name="submit_answer">Submit</string>
+    <string name="shared_prefs_filename">"com.annalisetarhan.kacaolur.prefs"</string>
+</resources>
