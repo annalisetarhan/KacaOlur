@@ -8,10 +8,10 @@
     <string name="request_received">Request Received</string>
     <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"
     </string>
-    <string name="item_name_header">Item name: </string>
-    <string name="item_description_header">Item Description: </string>
+    <string name="item_name_header">Item name: %1$s</string>
+    <string name="item_description_header">Item description: %1$s</string>
     <string name="courier_name">%s</string>
-    <string name="delivery_price_header">Delivery Price: %d lira</string>
+    <string name="delivery_price_header">Delivery Price: %1$.2f lira</string>
     <string name="delivery_time_header">Delivery Time: %d minutes</string>
     <string name="accept_bid">Accept Bid</string>
     <string name="question_header">Question: %s </string>

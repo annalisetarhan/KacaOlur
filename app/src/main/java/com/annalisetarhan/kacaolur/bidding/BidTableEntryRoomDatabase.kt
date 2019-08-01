@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = arrayOf(BidTableEntry::class), version = 1)
-public abstract class BidTableEntryRoomDatabase : RoomDatabase() {
+abstract class BidTableEntryRoomDatabase : RoomDatabase() {
     
     abstract fun bidTableEntryDao(): BidTableEntryDao
 
+    // I think this is to make the database a singleton
     companion object {
         @Volatile
         private var INSTANCE: BidTableEntryRoomDatabase? = null

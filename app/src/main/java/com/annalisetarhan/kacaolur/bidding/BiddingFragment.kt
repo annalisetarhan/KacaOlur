@@ -17,18 +17,14 @@ class BiddingFragment : Fragment() {
     private lateinit var bidTableEntryViewModel: BidTableEntryViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: BiddingFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
+        val binding: BiddingFragmentBinding = DataBindingUtil.inflate(inflater, com.annalisetarhan.kacaolur.R.layout.bidding_fragment, container, false)
 
         val sharedPrefs = activity?.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val itemName = sharedPrefs?.getString("item_name", "")
         val itemDescription = sharedPrefs?.getString("item_description", "")
 
-        binding.itemNameVar = itemName
-        binding.itemDescriptionVar = itemDescription
-
-        // This is janky af
-        binding.itemNameTextview.text = getString(R.string.item_name_header) + "  " + itemName
-        binding.itemDescriptionTextview.text = getString(R.string.item_description_header) + "  " + itemDescription
+        binding.itemNameFormatted = getString(R.string.item_name_header, itemName)
+        binding.itemDescriptionFormatted = getString(R.string.item_description_header, itemDescription)
 
         bidTableEntryViewModel = ViewModelProviders.of(this).get(BidTableEntryViewModel::class.java)
 

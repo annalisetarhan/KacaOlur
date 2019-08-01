@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <data>
+        <variable name="courier_name_formatted" type="String"/>
+        <variable name="question_formatted" type="String"/>
+    </data>
 
 <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -14,23 +19,30 @@
               android:background="@drawable/bid_list_border">
 
         <TextView
-            android:text="@{String.format(@string/courier_name, courier_name)}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/courier_name"/>
+                android:text="@{courier_name_formatted}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/courier_name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/answer_button"/>
 
         <TextView
-            android:text="@{String.format(@string/question_header, question)}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/question"/>
+                android:text="@{question_formatted}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/question"
+                app:layout_constraintTop_toBottomOf="@+id/courier_name"
+                app:layout_constraintEnd_toStartOf="@+id/answer_button"/>
 
         <Button
-            android:text="@string/answer_question_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/answer_button"/>
+                android:text="@string/answer_question_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/answer_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
+</layout>
