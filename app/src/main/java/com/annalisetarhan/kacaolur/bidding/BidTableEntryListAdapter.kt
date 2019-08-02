@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.BidListBidBinding
@@ -29,23 +31,18 @@ class BidTableEntryListAdapter(val context: Context) :
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var entries = emptyList<BidTableEntry>()
-
-    // By some magic, viewType needs to be passed in according to BID = 1, QUESTION = 2
-    // That magic seems to be getItemViewType :) :) :)
+    val newAnswer = MutableLiveData<String>()
+    val answeredEntry = MutableLiveData<BidTableEntry>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             BID -> {
                 val binding = BidListBidBinding.inflate(inflater, parent, false)
                 BidViewHolder(binding)
-                //val itemView = inflater.inflate(R.layout.bid_list_bid, parent, false)
-                //BidViewHolder(itemView)
             }
             QUESTION -> {
                 val binding = BidListQuestionBinding.inflate(inflater, parent, false)
                 QuestionViewHolder(binding)
-                //val itemView = inflater.inflate(R.layout.bid_list_question, parent, false)
-                //QuestionViewHolder(itemView)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -100,27 +97,14 @@ class BidTableEntryListAdapter(val context: Context) :
                 binding.answerSavedText.text = context.resources.getString(R.string.saved_answer_header, answer)
                 binding.answerSavedText.visibility = View.VISIBLE
                 binding.saveAnswerButton.visibility = View.GONE
+                saveAnswer(answer.toString(), entry)
             }
+        }
+
+        fun saveAnswer(answer: String, entry: BidTableEntry) {
+            answeredEntry.value = entry
+            newAnswer.value = answer
+            notifyDataSetChanged()
         }
     }
 }
-
-/*
-// This code probably goes here somewhere
-
-https://antonioleiva.com/recyclerview-listener/
-
-private lateinit var editAnswerView: EditText
-private lateinit var answerButton: Button
-
-
-// Making "answer" button work
-editAnswerView = answer
-answerButton = answer_button
-
-answerButton.setOnClickListener {
-    editAnswerView.visibility = View.VISIBLE
-    answerButton.visibility = View.GONE
-    val
-}
-*/

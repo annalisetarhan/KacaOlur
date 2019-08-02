@@ -29,5 +29,6 @@ class BidTableEntryViewModel(application: Application) : AndroidViewModel(applic
     // Did this one all on my own. Still feels a bit silly and redundant, but I'm going with it.
     fun addAnswer(answer: String, rowId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.addAnswer(answer, rowId)
+        println("answer added")
     }
 }

@@ -17,10 +17,11 @@ import kotlinx.android.synthetic.main.bidding_fragment.*
 class BiddingFragment : Fragment() {
 
     private lateinit var bidTableEntryViewModel: BidTableEntryViewModel
+    private lateinit var adapter: BidTableEntryListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: BiddingFragmentBinding =
-            DataBindingUtil.inflate(inflater, com.annalisetarhan.kacaolur.R.layout.bidding_fragment, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
 
         val sharedPrefs = activity?.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val itemName = sharedPrefs?.getString("item_name", "")
@@ -40,8 +41,7 @@ class BiddingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val adapter = BidTableEntryListAdapter(context!!)
-
+        adapter = BidTableEntryListAdapter(context!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)       // Used to be "activity"
 
@@ -51,5 +51,11 @@ class BiddingFragment : Fragment() {
         bidTableEntryViewModel.allEntries.observe(this, Observer { entries ->
             entries?.let { adapter.setEntries(it) }
         })
+
+        // I'm still iffy on this. I think it works, but if related things break, look here first
+        adapter.newAnswer.observe(this, Observer { answer ->
+            bidTableEntryViewModel.addAnswer(answer, adapter.answeredEntry.value!!.rowNum)
+        })
+
     }
 }
