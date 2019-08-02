@@ -4,10 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.annalisetarhan.kacaolur.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class BidTableEntryViewModel(application: Application) : AndroidViewModel(application) {
+class BiddingViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: BidTableEntryRepository
     val allEntries: LiveData<List<BidTableEntry>>
@@ -20,15 +21,18 @@ class BidTableEntryViewModel(application: Application) : AndroidViewModel(applic
         allEntries = repository.allEntries
     }
 
-    // This is a wrapper method for the repository's insert() method
-    // Using the IO Dispatcher because this is a database operation
-    fun insert(entry: BidTableEntry) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(entry)
-    }
-
     // Did this one all on my own. Still feels a bit silly and redundant, but I'm going with it.
     fun addAnswer(answer: String, rowId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.addAnswer(answer, rowId)
-        println("answer added")
+    }
+
+    fun saveAcceptedBid(entry: BidTableEntry) {
+        val context = getApplication<Application>().applicationContext
+        val sharedPrefs = context.getSharedPreferences((R.string.shared_prefs_filename).toString(), 0)
+        val editor = sharedPrefs.edit()
+        editor.putString("courier_name", entry.courierName)
+        editor.putFloat("delivery_price", entry.deliveryPrice!!)
+        editor.putInt("delivery_time", entry.deliveryTime!!)
+        editor.apply()
     }
 }

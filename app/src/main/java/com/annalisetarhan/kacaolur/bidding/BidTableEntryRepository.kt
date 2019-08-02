@@ -10,11 +10,6 @@ class BidTableEntryRepository(private val bidTableEntryDao: BidTableEntryDao) {
     // WorkerThread means this needs to be called from a non-ui thread
     // Suspend means it needs to be called from a coroutine or another suspending function
     @WorkerThread
-    suspend fun insert(entry: BidTableEntry) {
-        bidTableEntryDao.insert(entry)
-    }
-
-    @WorkerThread
     fun addAnswer(answer: String, rowId: Int) {
         bidTableEntryDao.addAnswer(answer, rowId)
     }

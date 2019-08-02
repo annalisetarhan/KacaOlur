@@ -18,5 +18,9 @@
               android:name="com.annalisetarhan.kacaolur.bidding.BiddingFragment"
               android:label="BiddingFragment"
               tools:layout="@layout/bidding_fragment"
-    />
+    >
+        <action android:id="@+id/action_biddingFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+    </fragment>
+    <fragment android:id="@+id/waitingFragment" android:name="com.annalisetarhan.kacaolur.waiting.WaitingFragment"
+              android:label="WaitingFragment"/>
 </navigation>
