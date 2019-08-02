@@ -6,6 +6,8 @@ import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -26,12 +28,7 @@ class BidTableEntryListAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-
-    // Hacky nonsense to fill up space
-    private var entries = listOf<BidTableEntry>(
-        BidTableEntry(0, "Mehmet T.", false, null, null, "domates or biber?"),
-        BidTableEntry(1, "Mehmet B.", true, 5f, 50, null)
-    )
+    private var entries = emptyList<BidTableEntry>()
 
     // By some magic, viewType needs to be passed in according to BID = 1, QUESTION = 2
     // That magic seems to be getItemViewType :) :) :)
@@ -72,17 +69,16 @@ class BidTableEntryListAdapter(val context: Context) :
         }
     }
 
+    fun setEntries(entries: List<BidTableEntry>) {
+        this.entries = entries
+        notifyDataSetChanged()
+    }
+
     inner class BidViewHolder(val binding: BidListBidBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(entry: BidTableEntry) {
             binding.courierNameFormatted = entry.courierName
             binding.deliveryPriceFormatted = context.resources.getString(R.string.delivery_price_header, entry.deliveryPrice)
             binding.deliveryTimeFormatted = context.resources.getString(R.string.delivery_time_header, entry.deliveryTime)
-
-            /*
-            itemView.courier_name.text = entry.courierName
-            itemView.delivery_price.text = entry.deliveryPrice.toString()
-            itemView.delivery_time.text = entry.deliveryTime.toString()
-            */
         }
     }
 
@@ -90,10 +86,41 @@ class BidTableEntryListAdapter(val context: Context) :
         fun bind(entry: BidTableEntry) {
             binding.courierNameFormatted = entry.courierName
             binding.questionFormatted = context.resources.getString(R.string.question_header, entry.question)
-            //itemView.courier_name.text = entry.courierName
-            //itemView.question.text = entry.question
+            binding.saveAnswerButton.visibility = View.GONE
+
+            binding.answerButton.setOnClickListener {
+                binding.answerButton.visibility = View.GONE
+                binding.answerEditText.visibility = View.VISIBLE
+                binding.saveAnswerButton.visibility = View.VISIBLE
+            }
+
+            binding.saveAnswerButton.setOnClickListener {
+                val answer = binding.answerEditText.text
+                binding.answerEditText.visibility = View.GONE
+                binding.answerSavedText.text = context.resources.getString(R.string.saved_answer_header, answer)
+                binding.answerSavedText.visibility = View.VISIBLE
+                binding.saveAnswerButton.visibility = View.GONE
+            }
         }
     }
 }
 
-//    inner class QuestionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+/*
+// This code probably goes here somewhere
+
+https://antonioleiva.com/recyclerview-listener/
+
+private lateinit var editAnswerView: EditText
+private lateinit var answerButton: Button
+
+
+// Making "answer" button work
+editAnswerView = answer
+answerButton = answer_button
+
+answerButton.setOnClickListener {
+    editAnswerView.visibility = View.VISIBLE
+    answerButton.visibility = View.GONE
+    val
+}
+*/

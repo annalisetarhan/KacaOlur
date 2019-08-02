@@ -13,7 +13,9 @@ class BidTableEntryViewModel(application: Application) : AndroidViewModel(applic
     val allEntries: LiveData<List<BidTableEntry>>
 
     init {
-        val entriesDao = BidTableEntryRoomDatabase.getDatabase(application).bidTableEntryDao()
+        // This is how you access the room database!! You just need a reference to the application (context?)
+        val entriesDao = BidTableEntryRoomDatabase.getDatabase(application, viewModelScope).bidTableEntryDao()
+        // I think this implies that the room database persists, but the viewModel creates new repositories every time
         repository = BidTableEntryRepository(entriesDao)
         allEntries = repository.allEntries
     }
@@ -23,8 +25,9 @@ class BidTableEntryViewModel(application: Application) : AndroidViewModel(applic
     fun insert(entry: BidTableEntry) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(entry)
     }
-}
 
-// MEMORY LEAK WARNING
-// Activities, fragments, and views have shorter lifecycles than ViewModels
-// => Don't keep references to them
+    // Did this one all on my own. Still feels a bit silly and redundant, but I'm going with it.
+    fun addAnswer(answer: String, rowId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addAnswer(answer, rowId)
+    }
+}

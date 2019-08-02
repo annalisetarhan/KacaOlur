@@ -9,8 +9,11 @@ interface BidTableEntryDao {
     @Insert
     suspend fun insert(bidTableEntry: BidTableEntry)
 
-    @Query( "SELECT * from bid_table ORDER BY time_stamp ASC")
+    @Query( "SELECT * from bid_table ORDER BY rowNum ASC")
     fun getAllEntries() : LiveData<List<BidTableEntry>>
+
+    @Query("UPDATE bid_table SET answer = :answer WHERE rowNum = :rowId ")
+    fun addAnswer(answer: String, rowId: Int)
 
     @Delete
     suspend fun delete(bidTableEntry: BidTableEntry)
