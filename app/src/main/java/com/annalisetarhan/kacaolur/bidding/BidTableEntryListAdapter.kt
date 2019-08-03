@@ -96,9 +96,7 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
 
         fun bind(entry: BidTableEntry) {
             showQuestion(entry)
-            hideSaveAnswerButton()
-            setUpAnswerButton()
-            setUpSaveAnswerButton(entry)
+            displayAppropriateAnsweringConfiguration(entry)
         }
 
         // Show Question
@@ -107,6 +105,17 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
             val question = context.resources.getString(R.string.question_header, entry.question)
             binding.courierNameFormatted = entry.courierName
             binding.questionFormatted = question
+        }
+
+        private fun displayAppropriateAnsweringConfiguration(entry: BidTableEntry) {
+            if (entry.answer == null) {
+                hideSaveAnswerButton()
+                setUpAnswerButton()
+                setUpSaveAnswerButton(entry)
+            } else {
+                hideEverything()
+                showAnswer(entry.answer)
+            }
         }
 
         private fun hideSaveAnswerButton() {
@@ -136,9 +145,11 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
         private fun setUpSaveAnswerButton(entry: BidTableEntry) {
             binding.saveAnswerButton.setOnClickListener {
                 val answer = binding.answerEditText.text
-                saveAnswerToDatabase(answer.toString(), entry)
-                hideAnsweringTools()
-                showAnswer(answer.toString())
+                if (answer.toString() != "") {
+                    saveAnswerToDatabase(answer.toString(), entry)
+                    hideAnsweringTools()
+                    showAnswer(answer.toString())
+                }
             }
         }
 
@@ -148,6 +159,14 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
         }
 
         private fun hideAnsweringTools() {
+            binding.answerEditText.visibility = View.GONE
+            binding.saveAnswerButton.visibility = View.GONE
+        }
+
+        // Hide Everything
+
+        private fun hideEverything() {
+            binding.answerButton.visibility = View.GONE
             binding.answerEditText.visibility = View.GONE
             binding.saveAnswerButton.visibility = View.GONE
         }

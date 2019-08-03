@@ -23,4 +23,7 @@
     <string name="saved_answer_header">Answer: %s </string>
     <string name="shared_prefs_filename">"com.annalisetarhan.kacaolur.prefs"</string>
     <string name="save_answer_button_text">Save</string>
+
+    <string name="bid_accepted">"Bid Accepted"</string>
+    <string name="bid_accepted_instructions">"Your courier is on it! They\'ll send you a picture of your item and its price before purchasing."</string>
 </resources>

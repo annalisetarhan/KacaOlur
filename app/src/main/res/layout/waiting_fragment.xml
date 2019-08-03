@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-</LinearLayout>
+    <data>
+        <variable name="item_name_formatted" type="String"/>
+        <variable name="item_description_formatted" type="String"/>
+        <variable name="delivery_price_formatted" type="String"/>
+        <variable name="delivery_time_formatted" type="String"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:text="@string/bid_accepted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bid_accepted" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp" android:textSize="30sp"/>
+
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayout"
+                android:padding="8dp"
+                app:layout_constraintTop_toBottomOf="@id/bid_accepted">
+
+            <TextView
+                    android:text="@string/bid_accepted_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/bid_accepted_instructions"
+                    android:textAlignment="center"/>
+            <TextView
+                    android:text="@{item_name_formatted}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/item_name_textview"/>
+            <TextView
+                    android:text="@{item_description_formatted}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/item_description_textview"/>
+            <TextView
+                    android:text="@{delivery_price_formatted}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/delivery_price"
+            />
+            <TextView
+                    android:text="@{delivery_time_formatted}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/delivery_time"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

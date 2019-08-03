@@ -20,4 +20,7 @@ interface BidTableEntryDao {
 
     @Query("DELETE FROM bid_table")
     fun deleteAll()
+
+    @Query("SELECT * FROM bid_table WHERE rowNum = :rowId")
+    fun getEntry(rowId: Int): BidTableEntry
 }

@@ -17,28 +17,46 @@ import kotlinx.android.synthetic.main.bidding_fragment.*
 class BiddingFragment : Fragment() {
 
     private lateinit var binding: BiddingFragmentBinding
-
     private lateinit var biddingViewModel: BiddingViewModel
     private lateinit var adapter: BidTableEntryListAdapter
 
-    private var itemName: String? = null
+    private lateinit var itemName: String
     private var itemDescription: String? = null
-
-    // OnCreateView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
 
-        getItemInfo()
-        displayItemInfo()
+        getViewModel()
+        watchForNewBidTableEntries()
 
         return binding.root
     }
 
+    private fun getViewModel() {
+        // ViewModelProviders creates ViewModel when activity starts, and persists it after activity is destroyed
+        biddingViewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
+    }
+
+    private fun watchForNewBidTableEntries() {
+        biddingViewModel.allEntries.observe(this, Observer { entries ->
+            entries?.let { adapter.setEntries(it) }
+        })
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        getItemInfo()
+        displayItemInfo()
+
+        setUpRecyclerView()
+        setLiveDataObservers()
+    }
+
     private fun getItemInfo() {
         val sharedPrefs = activity?.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        itemName = sharedPrefs?.getString("item_name", "")
-        itemDescription = sharedPrefs?.getString("item_description", "")
+        itemName = sharedPrefs?.getString("item_name", "")!!
+        itemDescription = sharedPrefs.getString("item_description", "")
     }
 
     private fun displayItemInfo() {
@@ -53,39 +71,15 @@ class BiddingFragment : Fragment() {
         }
     }
 
-    // OnActivityCreated
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        setUpRecyclerView()
-        getViewModel()
-        setLiveDataObservers()
-    }
-
     private fun setUpRecyclerView() {
         adapter = BidTableEntryListAdapter(context!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun getViewModel() {
-        // ViewModelProviders creates ViewModel when activity starts, and persists it after activity is destroyed
-        biddingViewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
-    }
-
-    // LiveData Observers
-
     private fun setLiveDataObservers() {
-        watchForNewBidTableEntries()
         watchForNewAnswers()
         watchForAcceptedBid()
-    }
-
-    private fun watchForNewBidTableEntries() {
-        biddingViewModel.allEntries.observe(this, Observer { entries ->
-            entries?.let { adapter.setEntries(it) }
-        })
     }
 
     private fun watchForNewAnswers() {
@@ -99,6 +93,8 @@ class BiddingFragment : Fragment() {
         adapter.acceptedBid.observe(this, Observer { acceptedBid ->
             biddingViewModel.saveAcceptedBid(acceptedBid)
             findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+            // TODO: disappear all buttons. Should still be able to navigate back to bidding screen,
+            //  shouldn't be able to accept bids or answer questions
         })
     }
 }

@@ -27,6 +27,11 @@ class BiddingViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun saveAcceptedBid(entry: BidTableEntry) {
+        writeBidToSharedPreferences(entry)
+        // TODO: tell server what's going on
+    }
+
+    private fun writeBidToSharedPreferences(entry: BidTableEntry) {
         val context = getApplication<Application>().applicationContext
         val sharedPrefs = context.getSharedPreferences((R.string.shared_prefs_filename).toString(), 0)
         val editor = sharedPrefs.edit()
