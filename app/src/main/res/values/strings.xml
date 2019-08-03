@@ -7,7 +7,8 @@
     <string name="kaca_olur">Kaça Olur?</string>
 
     <string name="request_received">Request Received</string>
-    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"</string>
+    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get
+        or wait for an even better one!"</string>
     <string name="item_name_header">Item name: %1$s</string>
     <string name="item_description_header">Item description: %1$s</string>
 
@@ -25,5 +26,7 @@
     <string name="save_answer_button_text">Save</string>
 
     <string name="bid_accepted">"Bid Accepted"</string>
-    <string name="bid_accepted_instructions">"Your courier is on it! They\'ll send you a picture of your item and its price before purchasing."</string>
+    <string name="bid_accepted_instructions">"Your courier is on it! They\'ll send you a picture of
+        your item and its price before purchasing."</string>
+    <string name="view_order">"View Order"</string>
 </resources>

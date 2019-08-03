@@ -18,12 +18,13 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
         setItemInfo(order)
     }
 
-    fun setItemInfo(order: Order) {
+    private fun setItemInfo(order: Order) {
         val context = getApplication<Application>().applicationContext
         val sharedPrefs = context.getSharedPreferences((R.string.shared_prefs_filename).toString(), 0)
         val editor = sharedPrefs.edit()
         editor.putString("item_name", order.itemName)
         editor.putString("item_description", order.itemDescription)
+        editor.putBoolean("has_accepted_bid", false)
         editor.apply()
     }
 }

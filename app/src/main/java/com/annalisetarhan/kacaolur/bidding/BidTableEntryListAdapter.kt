@@ -14,14 +14,14 @@ import java.lang.IllegalArgumentException
 const val BID = 1
 const val QUESTION = 2
 
-class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Boolean)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var entries = emptyList<BidTableEntry>()
 
     val newAnswer = MutableLiveData<String>()
     val answeredEntry = MutableLiveData<BidTableEntry>()
-
     val acceptedBid = MutableLiveData<BidTableEntry>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -52,6 +52,7 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
             is BidViewHolder -> holder.bind(current)
             is QuestionViewHolder -> holder.bind(current)
         }
+        println(current.courierName + " bound")
     }
 
     fun setEntries(entries: List<BidTableEntry>) {
@@ -68,7 +69,11 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
     inner class BidViewHolder(private val binding: BidListBidBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(entry: BidTableEntry) {
             displayBid(entry)
-            setUpAcceptBidButton(entry)
+            if (shouldHideButtons) {
+                binding.acceptBidButton.visibility = View.GONE
+            } else {
+                setUpAcceptBidButton(entry)
+            }
         }
 
         private fun displayBid(entry: BidTableEntry) {
@@ -83,7 +88,6 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
         private fun setUpAcceptBidButton(entry: BidTableEntry) {
             binding.acceptBidButton.setOnClickListener {
                 acceptedBid.value = entry
-                notifyDataSetChanged()
             }
         }
     }
@@ -96,10 +100,13 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
 
         fun bind(entry: BidTableEntry) {
             showQuestion(entry)
-            displayAppropriateAnsweringConfiguration(entry)
+            hideEverything()
+            if (entry.answer != null) {
+                showAnswer(entry.answer)
+            } else if (!shouldHideButtons) {
+                showAnswerConfiguration(entry)
+            }
         }
-
-        // Show Question
 
         private fun showQuestion(entry: BidTableEntry) {
             val question = context.resources.getString(R.string.question_header, entry.question)
@@ -107,50 +114,11 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
             binding.questionFormatted = question
         }
 
-        private fun displayAppropriateAnsweringConfiguration(entry: BidTableEntry) {
-            if (entry.answer == null) {
-                hideSaveAnswerButton()
-                setUpAnswerButton()
-                setUpSaveAnswerButton(entry)
-            } else {
-                hideEverything()
-                showAnswer(entry.answer)
-            }
-        }
-
-        private fun hideSaveAnswerButton() {
-            binding.saveAnswerButton.visibility = View.GONE
-        }
-
-        // Set Up AnswerButton
-
-        private fun setUpAnswerButton() {
-            binding.answerButton.setOnClickListener {
-                showAnswerButton()
-                showAnsweringTools()
-            }
-        }
-
-        private fun showAnswerButton() {
+        private fun hideEverything() {
             binding.answerButton.visibility = View.GONE
-        }
-
-        private fun showAnsweringTools() {
-            binding.answerEditText.visibility = View.VISIBLE
-            binding.saveAnswerButton.visibility = View.VISIBLE
-        }
-
-        // Set Up SaveAnswerButton
-
-        private fun setUpSaveAnswerButton(entry: BidTableEntry) {
-            binding.saveAnswerButton.setOnClickListener {
-                val answer = binding.answerEditText.text
-                if (answer.toString() != "") {
-                    saveAnswerToDatabase(answer.toString(), entry)
-                    hideAnsweringTools()
-                    showAnswer(answer.toString())
-                }
-            }
+            binding.saveButton.visibility = View.GONE
+            binding.answerEditText.visibility = View.GONE
+            binding.answerSavedText.visibility = View.GONE
         }
 
         private fun showAnswer(answer: String) {
@@ -158,23 +126,43 @@ class BidTableEntryListAdapter(val context: Context) : RecyclerView.Adapter<Recy
             binding.answerSavedText.visibility = View.VISIBLE
         }
 
-        private fun hideAnsweringTools() {
-            binding.answerEditText.visibility = View.GONE
-            binding.saveAnswerButton.visibility = View.GONE
+        private fun showAnswerConfiguration(entry: BidTableEntry) {
+            showAnswerButton()
+            setUpAnswerButtonClickListener()
+            setUpSaveButtonClickListener(entry)
         }
 
-        // Hide Everything
+        private fun showAnswerButton() {
+            binding.answerButton.visibility = View.VISIBLE
+        }
 
-        private fun hideEverything() {
-            binding.answerButton.visibility = View.GONE
+        private fun setUpAnswerButtonClickListener() {
+            binding.answerButton.setOnClickListener {
+                binding.answerButton.visibility = View.GONE
+                binding.answerEditText.visibility = View.VISIBLE
+                binding.saveButton.visibility = View.VISIBLE
+            }
+        }
+
+        private fun setUpSaveButtonClickListener(entry: BidTableEntry) {
+            binding.saveButton.setOnClickListener {
+                val answer = binding.answerEditText.text.toString()
+                if (answer != "") {
+                    saveAnswerToDatabase(answer, entry)
+                    hideAnsweringTools()
+                    showAnswer(answer)
+                }
+            }
+        }
+
+        private fun hideAnsweringTools() {
             binding.answerEditText.visibility = View.GONE
-            binding.saveAnswerButton.visibility = View.GONE
+            binding.saveButton.visibility = View.GONE
         }
 
         private fun saveAnswerToDatabase(answer: String, entry: BidTableEntry) {
             answeredEntry.value = entry
             newAnswer.value = answer
-            notifyDataSetChanged()
         }
     }
 }

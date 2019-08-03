@@ -1,5 +1,6 @@
 package com.annalisetarhan.kacaolur.bidding
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,45 +18,46 @@ import kotlinx.android.synthetic.main.bidding_fragment.*
 class BiddingFragment : Fragment() {
 
     private lateinit var binding: BiddingFragmentBinding
-    private lateinit var biddingViewModel: BiddingViewModel
+    private lateinit var viewModel: BiddingViewModel
     private lateinit var adapter: BidTableEntryListAdapter
+
+    private lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var itemName: String
     private var itemDescription: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
+        viewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
 
-        getViewModel()
-        watchForNewBidTableEntries()
+        watchForChangesInBidTable()
 
         return binding.root
     }
 
-    private fun getViewModel() {
-        // ViewModelProviders creates ViewModel when activity starts, and persists it after activity is destroyed
-        biddingViewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
-    }
-
-    private fun watchForNewBidTableEntries() {
-        biddingViewModel.allEntries.observe(this, Observer { entries ->
+    private fun watchForChangesInBidTable() {
+        viewModel.allEntries.observe(this, Observer { entries ->
             entries?.let { adapter.setEntries(it) }
         })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
 
         getItemInfo()
         displayItemInfo()
-
         setUpRecyclerView()
-        setLiveDataObservers()
+
+        if (sharedPrefs.getBoolean("has_accepted_bid", false)) {
+            showViewOrderButton()
+        } else {
+            setLiveDataObservers()
+        }
     }
 
     private fun getItemInfo() {
-        val sharedPrefs = activity?.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        itemName = sharedPrefs?.getString("item_name", "")!!
+        itemName = sharedPrefs.getString("item_name", "")!!
         itemDescription = sharedPrefs.getString("item_description", "")
     }
 
@@ -72,7 +74,8 @@ class BiddingFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        adapter = BidTableEntryListAdapter(context!!)
+        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
+        adapter = BidTableEntryListAdapter(context!!, sharedPrefs.getBoolean("has_accepted_bid", false))
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
@@ -85,16 +88,21 @@ class BiddingFragment : Fragment() {
     private fun watchForNewAnswers() {
         // I'm still iffy on this. I think it works, but if related things break, look here first
         adapter.newAnswer.observe(this, Observer { answer ->
-            biddingViewModel.addAnswer(answer, adapter.answeredEntry.value!!.rowNum)
+            viewModel.addAnswer(answer, adapter.answeredEntry.value!!.rowNum)
         })
     }
 
     private fun watchForAcceptedBid() {
         adapter.acceptedBid.observe(this, Observer { acceptedBid ->
-            biddingViewModel.saveAcceptedBid(acceptedBid)
+            viewModel.saveAcceptedBid(acceptedBid)
             findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
-            // TODO: disappear all buttons. Should still be able to navigate back to bidding screen,
-            //  shouldn't be able to accept bids or answer questions
         })
+    }
+
+    private fun showViewOrderButton() {
+        binding.viewOrderButton.visibility = View.VISIBLE
+        binding.viewOrderButton.setOnClickListener {
+            findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+        }
     }
 }

@@ -21,7 +21,6 @@ class BiddingViewModel(application: Application) : AndroidViewModel(application)
         allEntries = repository.allEntries
     }
 
-    // Did this one all on my own. Still feels a bit silly and redundant, but I'm going with it.
     fun addAnswer(answer: String, rowId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.addAnswer(answer, rowId)
     }
@@ -38,6 +37,7 @@ class BiddingViewModel(application: Application) : AndroidViewModel(application)
         editor.putString("courier_name", entry.courierName)
         editor.putFloat("delivery_price", entry.deliveryPrice!!)
         editor.putInt("delivery_time", entry.deliveryTime!!)
+        editor.putBoolean("has_accepted_bid", true)
         editor.apply()
     }
 }
