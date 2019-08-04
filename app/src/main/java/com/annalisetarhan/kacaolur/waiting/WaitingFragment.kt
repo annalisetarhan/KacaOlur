@@ -6,31 +6,72 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.WaitingFragmentBinding
+import kotlinx.android.synthetic.main.bidding_fragment.*
+import kotlinx.android.synthetic.main.waiting_fragment.*
 
 class WaitingFragment : Fragment() {
 
     private lateinit var binding: WaitingFragmentBinding
     private lateinit var viewModel: WaitingViewModel
-    //private lateinit var adapter: WaitingMessagesAdapter
-
-    private lateinit var itemName: String
-    private var itemDescription: String? = null
-    private var deliveryPrice: Float = 0f
-    private var deliveryTime: Int = 0
+    private lateinit var adapter: CourierMessageAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.waiting_fragment, container, false)
+        viewModel = ViewModelProviders.of(this).get(WaitingViewModel::class.java)
 
-        getOrderInfo()
+        watchForNewCustomerMessages()
+        watchForNewCourierMessages()
 
         return binding.root
     }
 
-    private fun getOrderInfo() {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        setOrderInfo()
+        setUpRecyclerView()
+    }
+
+    private fun setOrderInfo() {
         val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        //itemName = sharedPrefs.getString("item_name")!!
-       // itemDescription =
+
+        val courierName = sharedPrefs.getString("courier_name", "")!!
+        val itemName = sharedPrefs.getString("item_name", "")!!
+        val itemDescription = sharedPrefs.getString("item_description", "")
+        val deliveryPrice = sharedPrefs.getFloat("delivery_price", 0f)
+        val deliveryTime = sharedPrefs.getInt("delivery_time", 0)
+
+        binding.bidInstructionsWithName = getString(R.string.bid_accepted_instructions, courierName)
+        binding.itemNameFormatted = getString(R.string.item_name_header, itemName)
+        binding.itemDescriptionFormatted = getString(R.string.item_description_header, itemDescription)
+        binding.deliveryPriceFormatted = getString(R.string.delivery_price_header, deliveryPrice)
+        binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTime)
+    }
+
+    private fun watchForNewCustomerMessages() {
+        binding.sendMessageButton.setOnClickListener {
+            val message = chatbox_edittext.text.toString()
+            if (message != "") {
+                viewModel.sendMessage(message)
+                chatbox_edittext.text.clear()
+            }
+        }
+    }
+
+    private fun watchForNewCourierMessages() {
+        viewModel.allMessages.observe(this, Observer { messages ->
+            messages?.let { adapter.setMessages(it) }
+        })
+    }
+
+    private fun setUpRecyclerView() {
+        adapter = CourierMessageAdapter(context!!)
+        courierMessageRecyclerView.adapter = adapter
+        courierMessageRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 }

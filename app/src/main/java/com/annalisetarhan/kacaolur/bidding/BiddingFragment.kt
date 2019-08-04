@@ -75,7 +75,8 @@ class BiddingFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        adapter = BidTableEntryListAdapter(context!!, sharedPrefs.getBoolean("has_accepted_bid", false))
+        val hasAcceptedBid = sharedPrefs.getBoolean("has_accepted_bid", false)
+        adapter = BidTableEntryListAdapter(context!!, hasAcceptedBid)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }

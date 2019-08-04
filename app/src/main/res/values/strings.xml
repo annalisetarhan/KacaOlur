@@ -26,7 +26,7 @@
     <string name="save_answer_button_text">Save</string>
 
     <string name="bid_accepted">"Bid Accepted"</string>
-    <string name="bid_accepted_instructions">"Your courier is on it! They\'ll send you a picture of
-        your item and its price before purchasing."</string>
+    <string name="bid_accepted_instructions">"%s is on it! You\'ll be able to approve your item's price before it is purchased"</string>
     <string name="view_order">"View Order"</string>
+    <string name="courier_profile_picture_text_description">Courier profile picture</string>
 </resources>

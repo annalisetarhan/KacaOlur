@@ -49,10 +49,10 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val current = entries[position]
         when (holder) {
+            // This isn't redundant. The when statement causes a smart cast.
             is BidViewHolder -> holder.bind(current)
             is QuestionViewHolder -> holder.bind(current)
         }
-        println(current.courierName + " bound")
     }
 
     fun setEntries(entries: List<BidTableEntry>) {
@@ -99,8 +99,8 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
     inner class QuestionViewHolder(private val binding: BidListQuestionBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(entry: BidTableEntry) {
+            resetViewHolderForNewData()
             showQuestion(entry)
-            hideEverything()
             if (entry.answer != null) {
                 showAnswer(entry.answer)
             } else if (!shouldHideButtons) {
@@ -114,7 +114,7 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
             binding.questionFormatted = question
         }
 
-        private fun hideEverything() {
+        private fun resetViewHolderForNewData() {
             binding.answerButton.visibility = View.GONE
             binding.saveButton.visibility = View.GONE
             binding.answerEditText.visibility = View.GONE
