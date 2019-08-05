@@ -41,14 +41,10 @@ class WaitingFragment : Fragment() {
         val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
 
         val courierName = sharedPrefs.getString("courier_name", "")!!
-        val itemName = sharedPrefs.getString("item_name", "")!!
-        val itemDescription = sharedPrefs.getString("item_description", "")
         val deliveryPrice = sharedPrefs.getFloat("delivery_price", 0f)
         val deliveryTime = sharedPrefs.getInt("delivery_time", 0)
 
         binding.bidInstructionsWithName = getString(R.string.bid_accepted_instructions, courierName)
-        binding.itemNameFormatted = getString(R.string.item_name_header, itemName)
-        binding.itemDescriptionFormatted = getString(R.string.item_description_header, itemDescription)
         binding.deliveryPriceFormatted = getString(R.string.delivery_price_header, deliveryPrice)
         binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTime)
     }
@@ -60,12 +56,14 @@ class WaitingFragment : Fragment() {
                 viewModel.sendMessage(message)
                 chatbox_edittext.text.clear()
             }
+            scrollToPosition(adapter.itemCount - 1)
         }
     }
 
     private fun watchForNewCourierMessages() {
         viewModel.allMessages.observe(this, Observer { messages ->
             messages?.let { adapter.setMessages(it) }
+            scrollToPosition(adapter.itemCount - 1)
         })
     }
 
@@ -73,5 +71,9 @@ class WaitingFragment : Fragment() {
         adapter = CourierMessageAdapter(context!!)
         courierMessageRecyclerView.adapter = adapter
         courierMessageRecyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun scrollToPosition(position: Int) {
+        courierMessageRecyclerView.scrollToPosition(position)
     }
 }

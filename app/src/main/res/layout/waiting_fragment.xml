@@ -4,8 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="item_name_formatted" type="String"/>
-        <variable name="item_description_formatted" type="String"/>
         <variable name="delivery_price_formatted" type="String"/>
         <variable name="delivery_time_formatted" type="String"/>
         <variable name="bid_instructions_with_name" type="String"/>
@@ -30,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/instructionsCardView"
                 app:layout_constraintTop_toBottomOf="@id/countdown_timer"
-                android:padding="6dp"
+                android:padding="8dp"
                 app:cardUseCompatPadding="true">
 
             <TextView
@@ -55,18 +53,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-
-                <TextView
-                        android:text="@{item_name_formatted}"
-                        tools:text="Item: Salca"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/item_name_textview"/>
-                <TextView
-                        android:text="@{item_description_formatted}"
-                        tools:text="Description: Biggest you can find"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/item_description_textview"/>
 
                 <TextView
                         android:text="@{delivery_price_formatted}"
