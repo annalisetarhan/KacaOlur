@@ -3,6 +3,7 @@ package com.annalisetarhan.kacaolur.bidding
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalTime
 
 @Entity(tableName = "bid_table")
 data class BidTableEntry(
@@ -10,7 +11,7 @@ data class BidTableEntry(
     @ColumnInfo(name = "courier_name") val courierName: String,
     @ColumnInfo(name = "bid_not_question") val bidNotQuestion: Boolean,
     @ColumnInfo(name = "delivery_price") val deliveryPrice: Float?,
-    @ColumnInfo(name = "delivery_time") val deliveryTime: Int?,
+    @ColumnInfo(name = "delivery_time") val deliveryTimeInSeconds: Int?,
     @ColumnInfo(name = "question") val question: String?,
     @ColumnInfo(name = "answer") val answer: String?
 )

@@ -10,9 +10,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.annalisetarhan.kacaolur.R
+import com.annalisetarhan.kacaolur.Time
 import com.annalisetarhan.kacaolur.databinding.WaitingFragmentBinding
-import kotlinx.android.synthetic.main.bidding_fragment.*
 import kotlinx.android.synthetic.main.waiting_fragment.*
+
 
 class WaitingFragment : Fragment() {
 
@@ -34,19 +35,31 @@ class WaitingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         setOrderInfo()
+        setUpCountdownTimer()
         setUpRecyclerView()
     }
 
     private fun setOrderInfo() {
-        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
+        val sharedPrefs = activity!!.getSharedPreferences(com.annalisetarhan.kacaolur.R.string.shared_prefs_filename.toString(), 0)
 
         val courierName = sharedPrefs.getString("courier_name", "")!!
         val deliveryPrice = sharedPrefs.getFloat("delivery_price", 0f)
-        val deliveryTime = sharedPrefs.getInt("delivery_time", 0)
 
+        val deliveryTime = Time(sharedPrefs.getInt("delivery_time_in_seconds", 0))
+        val deliveryTimeInMinutes = deliveryTime.getTimeInMinutes()
+
+        binding.deliveryTimeForCountdown = deliveryTime.getStringForCountdown(context!!)
         binding.bidInstructionsWithName = getString(R.string.bid_accepted_instructions, courierName)
         binding.deliveryPriceFormatted = getString(R.string.delivery_price_header, deliveryPrice)
-        binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTime)
+        binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTimeInMinutes)
+    }
+
+    private fun setUpCountdownTimer() {
+        viewModel.setUpCountdownTimer(context!!)
+        viewModel.timeRemaining.observe(this, Observer { time ->
+            binding.countdownTimer.text = time
+        })
+
     }
 
     private fun watchForNewCustomerMessages() {

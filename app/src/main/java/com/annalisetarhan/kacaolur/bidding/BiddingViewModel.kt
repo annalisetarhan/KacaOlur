@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.annalisetarhan.kacaolur.R
+import com.annalisetarhan.kacaolur.Time
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -36,7 +37,9 @@ class BiddingViewModel(application: Application) : AndroidViewModel(application)
         val editor = sharedPrefs.edit()
         editor.putString("courier_name", entry.courierName)
         editor.putFloat("delivery_price", entry.deliveryPrice!!)
-        editor.putInt("delivery_time", entry.deliveryTime!!)
+        editor.putInt("delivery_time_in_seconds", entry.deliveryTimeInSeconds!!)
+        editor.putString("time_bid_accepted_string", Time().getStringForCountdown(context))
+        editor.putInt("time_paused_in_seconds", 0)
         editor.putBoolean("has_accepted_bid", true)
         editor.apply()
     }

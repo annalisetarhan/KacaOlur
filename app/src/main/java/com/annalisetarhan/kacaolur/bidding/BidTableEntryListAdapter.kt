@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.annalisetarhan.kacaolur.R
+import com.annalisetarhan.kacaolur.Time
 import com.annalisetarhan.kacaolur.databinding.BidListBidBinding
 import com.annalisetarhan.kacaolur.databinding.BidListQuestionBinding
 import java.lang.IllegalArgumentException
@@ -78,11 +79,12 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
 
         private fun displayBid(entry: BidTableEntry) {
             val price = context.resources.getString(R.string.delivery_price_header, entry.deliveryPrice)
-            val time = context.resources.getString(R.string.delivery_time_header, entry.deliveryTime)
+            val timeString = Time(entry.deliveryTimeInSeconds!!).getTimeInMinutes()
+            val timeFormatted = context.resources.getString(R.string.delivery_time_header, timeString)
 
             binding.courierNameFormatted = entry.courierName
             binding.deliveryPriceFormatted = price
-            binding.deliveryTimeFormatted = time
+            binding.deliveryTimeFormatted = timeFormatted
         }
 
         private fun setUpAcceptBidButton(entry: BidTableEntry) {

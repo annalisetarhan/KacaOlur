@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable name="delivery_time_for_countdown" type="String"/>
         <variable name="delivery_price_formatted" type="String"/>
         <variable name="delivery_time_formatted" type="String"/>
         <variable name="bid_instructions_with_name" type="String"/>
@@ -15,7 +16,7 @@
             android:layout_height="match_parent">
 
         <TextView
-                android:text="20:00"
+                android:text="@{delivery_time_for_countdown}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/countdown_timer"
                 android:textAlignment="center"
@@ -91,7 +92,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" android:id="@+id/chatbox_edittext"
-                    android:hint="Enter message"
+                    android:hint="@string/enter_message"
                     android:inputType="text"
                     android:layout_gravity="center"
                     android:layout_marginLeft="16dp"
@@ -102,7 +103,7 @@
                     android:layout_width="64dp"
                     android:layout_height="48dp"
                     android:id="@+id/send_message_button"
-                    android:text="SEND"
+                    android:text="@string/send"
                     android:textSize="14sp"
                     android:gravity="center"
                     android:layout_gravity="bottom"/>

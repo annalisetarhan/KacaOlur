@@ -2,6 +2,7 @@ package com.annalisetarhan.kacaolur.bidding
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import org.threeten.bp.LocalTime
 
 @Dao
 interface BidTableEntryDao {

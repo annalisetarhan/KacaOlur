@@ -14,7 +14,7 @@
 
     <string name="courier_name">%s</string>
     <string name="delivery_price_header">Delivery Price: %1$.2f lira</string>
-    <string name="delivery_time_header">Delivery Time: %d minutes</string>
+    <string name="delivery_time_header">Delivery Time: %s minutes</string>
     <string name="accept_bid">Accept Bid</string>
 
     <string name="question_header">Question: %s </string>
@@ -29,4 +29,11 @@
     <string name="bid_accepted_instructions">"%s is on it! You\'ll be able to approve your item's price before it is purchased"</string>
     <string name="view_order">"View Order"</string>
     <string name="courier_profile_picture_text_description">Courier profile picture</string>
+
+    <string name="mm_ss">"%1$s:%2$s"</string>
+    <string name="hh_mm">"%1$s:%2$s"</string>
+    <string name="hh_mm_ss">"%1$s:%2$s:%3$s</string>
+    <string name="add_zero">0%1$d</string>
+    <string name="enter_message">Enter message</string>
+    <string name="send">SEND</string>
 </resources>
