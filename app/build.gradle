@@ -66,4 +66,7 @@ dependencies {
 
     // Time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

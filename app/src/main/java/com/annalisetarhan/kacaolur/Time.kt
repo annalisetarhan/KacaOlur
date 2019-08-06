@@ -73,4 +73,15 @@ class Time {
     fun getSeconds(): Int {
         return (hours*3600) + (minutes*60) + seconds
     }
+
+    fun secondsSince(pastTime: Time): Int {
+        var pastTimeSeconds = pastTime.getSeconds()
+        var thisTimeSeconds = getSeconds()
+
+        if (thisTimeSeconds < pastTimeSeconds) {
+            thisTimeSeconds += 86400
+        }
+
+        return thisTimeSeconds - pastTimeSeconds
+    }
 }

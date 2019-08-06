@@ -36,4 +36,14 @@
     <string name="add_zero">0%1$d</string>
     <string name="enter_message">Enter message</string>
     <string name="send">SEND</string>
+    <string name="confirm_item">Confirm Item</string>
+
+    <string name="item_price_header">"Price: %.02f"</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
+    <string name="geri">Geri</string>
+    <string name="gonder">Gonder</string>
+    <string name="oh_no_what_s_wrong">Oh no! What\'s wrong?</string>
+    <string name="inspect_item">Inspect Item</string>
+    <string name="retake_picture">Retake Picture</string>
 </resources>

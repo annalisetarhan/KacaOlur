@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.Time
@@ -35,8 +36,9 @@ class WaitingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         setOrderInfo()
-        setUpCountdownTimer()
         setUpRecyclerView()
+        setUpTimerOrButton()
+        setUpCheaterButton()
     }
 
     private fun setOrderInfo() {
@@ -54,12 +56,33 @@ class WaitingFragment : Fragment() {
         binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTimeInMinutes)
     }
 
+    private fun setUpTimerOrButton() {
+        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
+        val buttonNotTimer = sharedPrefs.getBoolean("waiting_for_item_inspection", false)
+        if (buttonNotTimer) {
+            setUpInspectItemButton()
+        } else {
+            setUpCountdownTimer()
+        }
+    }
+
     private fun setUpCountdownTimer() {
+        binding.countdownTimer.visibility = View.VISIBLE
+        binding.inspectItemButton.visibility = View.GONE
+
         viewModel.setUpCountdownTimer(context!!)
         viewModel.timeRemaining.observe(this, Observer { time ->
             binding.countdownTimer.text = time
         })
+    }
 
+    private fun setUpInspectItemButton() {
+        binding.countdownTimer.visibility = View.INVISIBLE
+        binding.inspectItemButton.visibility = View.VISIBLE
+
+        binding.inspectItemButton.setOnClickListener {
+            findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+        }
     }
 
     private fun watchForNewCustomerMessages() {
@@ -78,6 +101,13 @@ class WaitingFragment : Fragment() {
             messages?.let { adapter.setMessages(it) }
             scrollToPosition(adapter.itemCount - 1)
         })
+    }
+
+    private fun setUpCheaterButton() {
+        binding.cheaterButton.setOnClickListener {
+            viewModel.pauseTimer(context!!)
+            findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+        }
     }
 
     private fun setUpRecyclerView() {
