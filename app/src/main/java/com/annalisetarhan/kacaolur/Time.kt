@@ -40,15 +40,20 @@ class Time {
     }
 
     fun getStringForCountdown(context: Context): String {
-        val minString = twoDigitString(minutes, context)
-        val secString = twoDigitString(seconds, context)
-
         return if (hours == 0) {
+            val minString = twoDigitString(minutes, context)
+            val secString = twoDigitString(seconds, context)
             context.resources.getString(R.string.mm_ss, minString, secString)
         } else {
-            val hourString = twoDigitString(hours, context)
-            context.resources.getString(R.string.hh_mm_ss, hourString, minString, secString)
+            getStringForSharedPrefs(context)
         }
+    }
+
+    fun getStringForSharedPrefs(context: Context): String {
+        val minString = twoDigitString(minutes, context)
+        val secString = twoDigitString(seconds, context)
+        val hourString = twoDigitString(hours, context)
+        return context.resources.getString(R.string.hh_mm_ss, hourString, minString, secString)
     }
 
     fun getTimestampString(context: Context): String {
@@ -75,7 +80,7 @@ class Time {
     }
 
     fun secondsSince(pastTime: Time): Int {
-        var pastTimeSeconds = pastTime.getSeconds()
+        val pastTimeSeconds = pastTime.getSeconds()
         var thisTimeSeconds = getSeconds()
 
         if (thisTimeSeconds < pastTimeSeconds) {

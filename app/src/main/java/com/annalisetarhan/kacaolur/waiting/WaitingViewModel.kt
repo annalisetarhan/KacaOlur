@@ -34,7 +34,6 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
     fun setUpCountdownTimer(context: Context) {
         val secondsRemaining = calculateCountdownTime(context)
         timeRemaining.value = Time(secondsRemaining).getStringForCountdown(context)
-        println("seconds remaining is " + secondsRemaining)
         startCountdown(secondsRemaining, context)
     }
 
@@ -44,7 +43,6 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
         val timePromisedInSeconds = sharedPrefs.getInt("delivery_time_in_seconds", 0)
         val timePausedInSeconds = sharedPrefs.getInt("time_paused_in_seconds", 0)
 
-        println("got " + timePausedInSeconds + " from sharedPrefs")
         val currentTime = Time()
         val timeBidAccepted = Time(sharedPrefs.getString("time_bid_accepted_string", "")!!)
         val timeElapsedSinceBidAccepted = currentTime.secondsSince(timeBidAccepted)
@@ -70,6 +68,6 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
         val sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val editor = sharedPrefs.edit()
         editor.putBoolean("waiting_for_item_inspection", true)
-        editor.putString("last_time_paused", Time().getStringForCountdown(context))
+        editor.putString("last_time_paused", Time().getStringForSharedPrefs(context))
         editor.apply()}
 }

@@ -31,5 +31,8 @@
               android:label="ConfirmingFragment">
         <action android:id="@+id/action_confirmingFragment_to_waitingFragment" app:destination="@id/waitingFragment"
                 app:popUpTo="@+id/waitingFragment"/>
+        <action android:id="@+id/action_confirmingFragment_to_paymentFragment" app:destination="@id/paymentFragment"/>
     </fragment>
+    <fragment android:id="@+id/paymentFragment" android:name="com.annalisetarhan.kacaolur.payment.PaymentFragment"
+              android:label="PaymentFragment"/>
 </navigation>

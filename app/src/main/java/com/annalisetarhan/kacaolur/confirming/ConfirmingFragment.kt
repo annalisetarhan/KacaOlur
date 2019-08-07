@@ -62,7 +62,8 @@ class ConfirmingFragment : Fragment() {
 
     private fun setAcceptButton() {
         binding.acceptButton.setOnClickListener {
-            // TODO: go to yay screen
+            viewModel.itemAccepted(context!!)
+            findNavController().navigate(R.id.action_confirmingFragment_to_paymentFragment)
         }
     }
 
@@ -71,6 +72,7 @@ class ConfirmingFragment : Fragment() {
             binding.complaintCardview.visibility = View.VISIBLE
             binding.geriButton.visibility = View.VISIBLE
             binding.gonderButton.visibility = View.VISIBLE
+
             binding.acceptButton.visibility = View.GONE
             binding.rejectButton.visibility = View.GONE
         }
@@ -78,9 +80,10 @@ class ConfirmingFragment : Fragment() {
 
     private fun setGeriButton() {
         binding.geriButton.setOnClickListener {
-            binding.complaintCardview.visibility = View.INVISIBLE
             binding.acceptButton.visibility = View.VISIBLE
             binding.rejectButton.visibility = View.VISIBLE
+
+            binding.complaintCardview.visibility = View.INVISIBLE
             binding.geriButton.visibility = View.GONE
             binding.gonderButton.visibility = View.GONE
         }
@@ -93,13 +96,13 @@ class ConfirmingFragment : Fragment() {
             if (complaintString == "") {
                 askForReason()
             } else {
-                acceptApproval()
+                acceptRejection(complaintString)
             }
         }
     }
 
-    private fun acceptApproval() {
-        viewModel.unPauseTimer(context!!)
+    private fun acceptRejection(complaint: String) {
+        viewModel.itemRejected(context!!, complaint)
         findNavController().navigate(R.id.action_confirmingFragment_to_waitingFragment)
         // TODO: fill in server
     }

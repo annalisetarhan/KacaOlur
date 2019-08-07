@@ -46,4 +46,10 @@
     <string name="oh_no_what_s_wrong">Oh no! What\'s wrong?</string>
     <string name="inspect_item">Inspect Item</string>
     <string name="retake_picture">Retake Picture</string>
+    <string name="payment">Payment</string>
+    <string name="confirm">Confirm</string>
+    <string name="pay">Pay</string>
+
+    <string name="reason_for_rejection">"Reason for rejection: %1$s</string>
+    <string name="courier_s_item_picture">Courier\'s item picture</string>
 </resources>

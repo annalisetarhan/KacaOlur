@@ -57,6 +57,7 @@
             <ImageView
                     android:layout_height="250dp"
                     android:layout_width="match_parent"
+                    android:contentDescription="@string/courier_s_item_picture"
                     app:srcCompat="@android:drawable/ic_menu_mapmode" android:id="@+id/imageView"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"
@@ -87,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    style="?android:attr/buttonBarStyle"
                     app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/buttons_layout">
                 <Button
                         android:text="@string/reject"
@@ -95,13 +97,15 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/reject_button"
                         android:layout_marginEnd="30dp" android:layout_marginStart="30dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
                 <Button
                         android:text="@string/accept"
                         android:textSize="24sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/accept_button"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_weight="1" android:layout_marginEnd="30dp"
                         android:layout_marginStart="30dp"/>
                 <Button
@@ -112,6 +116,7 @@
                         android:id="@+id/geri_button"
                         android:layout_marginEnd="30dp" android:layout_marginStart="30dp"
                         android:layout_weight="1"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:visibility="gone"/>
                 <Button
                         android:text="@string/gonder"
@@ -121,6 +126,7 @@
                         android:id="@+id/gonder_button"
                         android:layout_weight="1" android:layout_marginEnd="30dp"
                         android:layout_marginStart="30dp"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:visibility="gone"/>
             </LinearLayout>
 
