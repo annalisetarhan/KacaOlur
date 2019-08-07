@@ -70,6 +70,6 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
         val sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val editor = sharedPrefs.edit()
         editor.putBoolean("waiting_for_item_inspection", true)
-        editor.putString("last_time_paused", Time().getStringForCountdown(context!!))
+        editor.putString("last_time_paused", Time().getStringForCountdown(context))
         editor.apply()}
 }

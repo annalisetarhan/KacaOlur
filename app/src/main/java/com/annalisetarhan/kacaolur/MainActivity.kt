@@ -1,9 +1,7 @@
 package com.annalisetarhan.kacaolur
 
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.annalisetarhan.kacaolur.confirming.ConfirmingFragment
 
 
 class MainActivity : AppCompatActivity() {
