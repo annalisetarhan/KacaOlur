@@ -12,6 +12,7 @@
         <action
                 android:id="@+id/action_orderFragment_to_biddingFragment"
                 app:destination="@id/biddingFragment"/>
+        <action android:id="@+id/action_orderFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
     </fragment>
 
     <fragment android:id="@+id/biddingFragment"
@@ -34,5 +35,11 @@
         <action android:id="@+id/action_confirmingFragment_to_paymentFragment" app:destination="@id/paymentFragment"/>
     </fragment>
     <fragment android:id="@+id/paymentFragment" android:name="com.annalisetarhan.kacaolur.payment.PaymentFragment"
-              android:label="PaymentFragment"/>
+              android:label="PaymentFragment">
+        <action android:id="@+id/action_paymentFragment_to_confirmingFragment"
+                app:destination="@id/confirmingFragment"/>
+        <action android:id="@+id/action_paymentFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+    </fragment>
+    <fragment android:id="@+id/settingsFragment" android:name="com.annalisetarhan.kacaolur.settings.SettingsFragment"
+              android:label="SettingsFragment" tools:layout="@layout/settings_fragment"/>
 </navigation>

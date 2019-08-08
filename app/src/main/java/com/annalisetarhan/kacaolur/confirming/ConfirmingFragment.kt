@@ -62,7 +62,6 @@ class ConfirmingFragment : Fragment() {
 
     private fun setAcceptButton() {
         binding.acceptButton.setOnClickListener {
-            viewModel.itemAccepted(context!!)
             findNavController().navigate(R.id.action_confirmingFragment_to_paymentFragment)
         }
     }

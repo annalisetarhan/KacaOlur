@@ -1,11 +1,9 @@
 package com.annalisetarhan.kacaolur.ordering
 
-import android.Manifest
 import android.Manifest.permission.*
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -15,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -23,28 +20,25 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.annalisetarhan.kacaolur.R
-import com.annalisetarhan.kacaolur.Time
 import com.annalisetarhan.kacaolur.databinding.OrderFragmentBinding
 import kotlinx.android.synthetic.main.order_fragment.*
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class OrderFragment : Fragment() {
 
     private lateinit var viewModel: OrderViewModel
     private lateinit var binding: OrderFragmentBinding
 
+    // TODO: Investigate this
     val PERMISSION_REQUEST_CODE = 101
     val REQUEST_IMAGE_CAPTURE = 101
     val REQUEST_TAKE_PHOTO = 101
 
-    lateinit var photoPath: String
-    lateinit var photoUri: Uri
+    private lateinit var photoPath: String
+    private lateinit var photoUri: Uri
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         binding = DataBindingUtil.inflate(inflater, R.layout.order_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
 
@@ -54,7 +48,7 @@ class OrderFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (viewModel.orderAccepted) {
+        if (viewModel.orderSubmitted) {
             sterilizeFragment()
         } else {
             setUpNormalFragment()
@@ -62,9 +56,26 @@ class OrderFragment : Fragment() {
     }
 
     private fun sterilizeFragment() {
-        binding.itemNameEditText.isEnabled = false
-        binding.itemDescriptionEditText.isEnabled = false
+        setItemName()
+        setItemDescription()
+        addPicture()
         binding.attachPictureButton.visibility = View.GONE
+        setUpSterileKacaButton()
+    }
+
+    private fun setItemName() {
+        val itemName = viewModel.getItemName()
+        binding.itemNameEditText.isEnabled = false
+        binding.itemNameEditText.hint = itemName
+    }
+
+    private fun setItemDescription() {
+        val itemDescription = viewModel.getItemDescription()
+        binding.itemDescriptionEditText.isEnabled = false
+        binding.itemDescriptionEditText.hint = itemDescription
+    }
+
+    private fun setUpSterileKacaButton() {
         binding.kacaButton.setOnClickListener {
             findNavController().navigate(R.id.action_orderFragment_to_biddingFragment)
         }
@@ -73,6 +84,14 @@ class OrderFragment : Fragment() {
     private fun setUpNormalFragment() {
         setUpAttachPictureButton()      // Consider disabling this for phones that don't have a camera
         setUpKacaButton()
+        addPicture()
+    }
+
+    private fun addPicture() {
+        if (viewModel.hasPicture) {
+            val photoUri = viewModel.getPhotoUri()
+            imageView.setImageURI(photoUri)
+        }
     }
 
     /*
@@ -109,11 +128,11 @@ class OrderFragment : Fragment() {
             PERMISSION_REQUEST_CODE -> {
 
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                ) {
                 } else {
                     Toast.makeText(context, "Permission Denied", Toast.LENGTH_LONG).show()
                 }
-
                 takePicture()
             }
         }
@@ -156,7 +175,6 @@ class OrderFragment : Fragment() {
             viewModel.savePhoto(photoUri)
         }
     }
-
 
 
     /*

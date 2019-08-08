@@ -52,4 +52,14 @@
 
     <string name="reason_for_rejection">"Reason for rejection: %1$s</string>
     <string name="courier_s_item_picture">Courier\'s item picture</string>
+
+    <string name="total_price_header">"Total price: %.2f"</string>
+    <string name="payment_confirmed">"Payment confirmed!"</string>
+    <string name="cancel_order">Cancel Order</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
+    <string name="display_name">Display Name:</string>
+    <string name="phone_number">Phone Number:</string>
+    <string name="sample_phone_number">+90 542 549 54 79</string>
+    <string name="sample_username">Görkem Tarhan</string>
 </resources>

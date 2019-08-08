@@ -1,5 +1,6 @@
 package com.annalisetarhan.kacaolur.waiting
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ class WaitingFragment : Fragment() {
     private lateinit var binding: WaitingFragmentBinding
     private lateinit var viewModel: WaitingViewModel
     private lateinit var adapter: CourierMessageAdapter
+    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.waiting_fragment, container, false)
@@ -35,6 +37,8 @@ class WaitingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        sharedPrefs = activity!!.getSharedPreferences(com.annalisetarhan.kacaolur.R.string.shared_prefs_filename.toString(), 0)
+
         setOrderInfo()
         setUpRecyclerView()
         setUpTimerOrButton()
@@ -42,22 +46,17 @@ class WaitingFragment : Fragment() {
     }
 
     private fun setOrderInfo() {
-        val sharedPrefs = activity!!.getSharedPreferences(com.annalisetarhan.kacaolur.R.string.shared_prefs_filename.toString(), 0)
-
         val courierName = sharedPrefs.getString("courier_name", "")!!
         val deliveryPrice = sharedPrefs.getFloat("delivery_price", 0f)
-
         val deliveryTime = Time(sharedPrefs.getInt("delivery_time_in_seconds", 0))
         val deliveryTimeInMinutes = deliveryTime.getTimeInMinutes()
 
-        binding.deliveryTimeForCountdown = deliveryTime.getStringForCountdown(context!!)
         binding.bidInstructionsWithName = getString(R.string.bid_accepted_instructions, courierName)
         binding.deliveryPriceFormatted = getString(R.string.delivery_price_header, deliveryPrice)
         binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTimeInMinutes)
     }
 
     private fun setUpTimerOrButton() {
-        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val buttonNotTimer = sharedPrefs.getBoolean("waiting_for_item_inspection", false)
         if (buttonNotTimer) {
             setUpInspectItemButton()
@@ -72,7 +71,7 @@ class WaitingFragment : Fragment() {
 
         viewModel.setUpCountdownTimer(context!!)
         viewModel.timeRemaining.observe(this, Observer { time ->
-            binding.countdownTimer.text = time
+            binding.deliveryTimeForCountdown = time
         })
     }
 

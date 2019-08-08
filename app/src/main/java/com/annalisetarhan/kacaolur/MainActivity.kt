@@ -2,7 +2,7 @@ package com.annalisetarhan.kacaolur
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
+import android.view.Menu
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Shared Preferences
         val sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_filename), 0)
 
         if (sharedPreferences.getLong(userID, 0) != 0L) {
@@ -24,4 +23,5 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_main)
         }
     }
+
 }

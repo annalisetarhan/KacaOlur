@@ -89,4 +89,19 @@ class Time {
 
         return thisTimeSeconds - pastTimeSeconds
     }
+
+    fun getSecondsPaused(context: Context): Int {
+        val sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
+        val lastTimePaused = sharedPrefs.getString("last_time_paused", "")!!
+
+        val timePausedThisTime =
+            if (lastTimePaused == "") {
+                0
+            } else {
+                secondsSince(Time(lastTimePaused))
+            }
+
+        val timePausedPreviously = sharedPrefs.getInt("time_paused_in_seconds", 0)
+        return timePausedThisTime + timePausedPreviously
+    }
 }

@@ -17,15 +17,12 @@ import kotlinx.coroutines.launch
 class ConfirmingViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: CourierMessageRepository
-    lateinit var sharedPrefs: SharedPreferences
+    var sharedPrefs: SharedPreferences
 
     init {
         val messagesDao = CourierMessageRoomDatabase.getDatabase(application, viewModelScope).courierMessageDao()
         repository = CourierMessageRepository(messagesDao)
-    }
-
-    fun itemAccepted(context: Context) {
-        updateSharedPrefs(context)
+        sharedPrefs = application.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
     }
 
     fun itemRejected(context: Context, complaint: String) {
@@ -35,30 +32,13 @@ class ConfirmingViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun updateSharedPrefs(context: Context) {
-        sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-
-        val secondsPaused = getSecondsPaused()
+        val secondsPaused = Time().getSecondsPaused(context)
 
         val editor = sharedPrefs.edit()
         editor.putInt("time_paused_in_seconds", secondsPaused)
         editor.putString("last_time_paused", "")
         editor.putBoolean("waiting_for_item_inspection", false)
         editor.apply()
-    }
-
-    private fun getSecondsPaused(): Int {
-        val currentTime = Time()
-        val lastTimePaused = sharedPrefs.getString("last_time_paused", "")!!
-
-        val timePausedThisTime =
-            if (lastTimePaused == "") {
-                0
-            } else {
-                currentTime.secondsSince(Time(lastTimePaused))
-            }
-
-        val timePausedPreviously = sharedPrefs.getInt("time_paused_in_seconds", 0)
-        return timePausedThisTime + timePausedPreviously
     }
 
     private fun addComplaintToMessageThread(context: Context, complaint: String) = viewModelScope.launch(Dispatchers.IO) {

@@ -47,7 +47,12 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
         val timeBidAccepted = Time(sharedPrefs.getString("time_bid_accepted_string", "")!!)
         val timeElapsedSinceBidAccepted = currentTime.secondsSince(timeBidAccepted)
 
-        return (timePromisedInSeconds + timePausedInSeconds - timeElapsedSinceBidAccepted)
+        val timeRemaining = timePromisedInSeconds + timePausedInSeconds - timeElapsedSinceBidAccepted
+        return if (timeRemaining < 1) {
+            0
+        } else {
+            timeRemaining
+        }
     }
 
     private fun startCountdown(seconds: Int, context: Context) {
@@ -62,6 +67,10 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
                 timeRemaining.value = "00:00"
             }
         }.start()
+
+        if (seconds == 0) {
+            timeRemaining.value = "00:00"
+        }
     }
 
     fun pauseTimer(context: Context) {
