@@ -3,6 +3,9 @@ package com.annalisetarhan.kacaolur
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import androidx.navigation.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,4 +27,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.settingsFragment) {
+            item.onNavDestinationSelected(findNavController(R.id.nav_host_fragment))
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
 }

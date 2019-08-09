@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/main_navigation"
-            app:startDestination="@id/orderFragment">
+<navigation
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_navigation"
+        app:startDestination="@id/orderFragment">
 
-    <fragment android:id="@+id/orderFragment"
-              android:name="com.annalisetarhan.kacaolur.ordering.OrderFragment"
-              android:label="OrderFragment"
-              tools:layout="@layout/order_fragment">
+    <fragment
+            android:id="@+id/orderFragment"
+            android:name="com.annalisetarhan.kacaolur.ordering.OrderFragment"
+            android:label="OrderFragment"
+            tools:layout="@layout/order_fragment">
         <action
                 android:id="@+id/action_orderFragment_to_biddingFragment"
                 app:destination="@id/biddingFragment"/>
-        <action android:id="@+id/action_orderFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+        <action
+                android:id="@+id/action_orderFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"/>
     </fragment>
 
-    <fragment android:id="@+id/biddingFragment"
-              android:name="com.annalisetarhan.kacaolur.bidding.BiddingFragment"
-              android:label="BiddingFragment"
-              tools:layout="@layout/bidding_fragment"
-    >
-        <action android:id="@+id/action_biddingFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+    <fragment
+            android:id="@+id/biddingFragment"
+            android:name="com.annalisetarhan.kacaolur.bidding.BiddingFragment"
+            android:label="BiddingFragment"
+            tools:layout="@layout/bidding_fragment">
+        <action android:id="@+id/action_biddingFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"/>
     </fragment>
-    <fragment android:id="@+id/waitingFragment" android:name="com.annalisetarhan.kacaolur.waiting.WaitingFragment"
-              android:label="WaitingFragment">
-        <action android:id="@+id/action_waitingFragment_to_confirmingFragment"
+
+    <fragment
+            android:id="@+id/waitingFragment"
+            android:name="com.annalisetarhan.kacaolur.waiting.WaitingFragment"
+            android:label="WaitingFragment">
+        <action
+                android:id="@+id/action_waitingFragment_to_confirmingFragment"
                 app:destination="@id/confirmingFragment"/>
     </fragment>
-    <fragment android:id="@+id/confirmingFragment"
-              android:name="com.annalisetarhan.kacaolur.confirming.ConfirmingFragment"
-              android:label="ConfirmingFragment">
-        <action android:id="@+id/action_confirmingFragment_to_waitingFragment" app:destination="@id/waitingFragment"
+
+    <fragment
+            android:id="@+id/confirmingFragment"
+            android:name="com.annalisetarhan.kacaolur.confirming.ConfirmingFragment"
+            android:label="ConfirmingFragment">
+        <action android:id="@+id/action_confirmingFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"
                 app:popUpTo="@+id/waitingFragment"/>
-        <action android:id="@+id/action_confirmingFragment_to_paymentFragment" app:destination="@id/paymentFragment"/>
+        <action android:id="@+id/action_confirmingFragment_to_paymentFragment"
+                app:destination="@id/paymentFragment"/>
     </fragment>
-    <fragment android:id="@+id/paymentFragment" android:name="com.annalisetarhan.kacaolur.payment.PaymentFragment"
-              android:label="PaymentFragment">
-        <action android:id="@+id/action_paymentFragment_to_confirmingFragment"
+
+    <fragment
+            android:id="@+id/paymentFragment"
+            android:name="com.annalisetarhan.kacaolur.payment.PaymentFragment"
+            android:label="PaymentFragment">
+        <action
+                android:id="@+id/action_paymentFragment_to_confirmingFragment"
                 app:destination="@id/confirmingFragment"/>
-        <action android:id="@+id/action_paymentFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+        <action android:id="@+id/action_paymentFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"/>
     </fragment>
-    <fragment android:id="@+id/settingsFragment" android:name="com.annalisetarhan.kacaolur.settings.SettingsFragment"
-              android:label="SettingsFragment" tools:layout="@layout/settings_fragment"/>
+
+    <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.annalisetarhan.kacaolur.settings.SettingsFragment"
+            android:label="SettingsFragment"
+            tools:layout="@layout/settings_fragment"/>
 </navigation>
