@@ -1,21 +1,23 @@
 <resources>
     <string name="app_name">Kaca Olur</string>
-    <string name="new_order">Yeni Siparış</string>
+    <string name="order">Order</string>
     <string name="what_do_you_need">Ne lazım?</string>
-    <string name="item_description">Size? Brand? From a particular store?</string>
-    <string name="attach_picture_button">"Attach Picture\n(optional)"</string>
+    <string name="item_description">size, brand, type</string>
+    <string name="attach_picture_button">"Attach Picture"</string>
     <string name="kaca_olur">Kaça Olur?</string>
 
-    <string name="request_received">Request Received</string>
-    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get
-        or wait for an even better one!"</string>
+    <string name="choose">Choose</string>
+    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"</string>
     <string name="item_name_header">Item name: %1$s</string>
     <string name="item_description_header">Item description: %1$s</string>
 
     <string name="courier_name">%s</string>
+    <string name="delivery_price_header_bold">"Delivery Price: &lt;b> %1$.2f lira &lt;/b>"</string>
+    <string name="delivery_time_header_bold">"Delivery Time: &lt;b> %s minutes "&lt;/b>"</string>
+    <string name="accept_bid">Accept Bid</string>
+
     <string name="delivery_price_header">Delivery Price: %1$.2f lira</string>
     <string name="delivery_time_header">Delivery Time: %s minutes</string>
-    <string name="accept_bid">Accept Bid</string>
 
     <string name="question_header">Question: %s </string>
     <string name="answer_question_button">Answer</string>
@@ -36,7 +38,6 @@
     <string name="add_zero">0%1$d</string>
     <string name="enter_message">Enter message</string>
     <string name="send">SEND</string>
-    <string name="confirm_item">Confirm Item</string>
 
     <string name="item_price_header">"Price: %.02f"</string>
     <string name="reject">Reject</string>
@@ -46,7 +47,7 @@
     <string name="oh_no_what_s_wrong">Oh no! What\'s wrong?</string>
     <string name="inspect_item">Inspect Item</string>
     <string name="retake_picture">Retake Picture</string>
-    <string name="payment">Payment</string>
+    <string name="payment">Pay</string>
     <string name="confirm">Confirm</string>
     <string name="pay">Pay</string>
 
@@ -62,4 +63,8 @@
     <string name="phone_number">Phone Number:</string>
     <string name="sample_phone_number">+90 542 549 54 79</string>
     <string name="sample_username">Görkem Tarhan</string>
+    <string name="wait">Wait</string>
+    <string name="item_name">Item name:</string>
+    <string name="other_details">Other details?</string>
+    <string name="submitted_picture">Submitted picture</string>
 </resources>

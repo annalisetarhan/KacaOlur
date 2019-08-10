@@ -91,6 +91,7 @@ class OrderFragment : Fragment() {
         if (viewModel.hasPicture) {
             val photoUri = viewModel.getPhotoUri()
             imageView.setImageURI(photoUri)
+            println("should have set imageView")
         }
     }
 

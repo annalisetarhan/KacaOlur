@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable name="courier_name_formatted" type="String"/>
-        <variable name="delivery_price_formatted" type="String"/>
-        <variable name="delivery_time_formatted" type="String"/>
+        <variable name="delivery_price_formatted" type="android.text.Spanned"/>
+        <variable name="delivery_time_formatted" type="android.text.Spanned"/>
     </data>
 
     <androidx.cardview.widget.CardView
@@ -29,8 +29,9 @@
                     android:text="@{delivery_price_formatted}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/courier_name"
-                    android:id="@+id/delivery_price" app:layout_constraintEnd_toStartOf="@+id/accept_bid_button"
+                    app:layout_constraintTop_toBottomOf="@+id/courier_name" android:id="@+id/delivery_price"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toStartOf="@+id/accept_bid_button"
                     app:layout_constraintStart_toStartOf="parent"/>
             <TextView
                     android:text="@{delivery_time_formatted}"

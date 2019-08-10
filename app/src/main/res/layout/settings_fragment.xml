@@ -10,14 +10,13 @@
             tools:context="com.annalisetarhan.kacaolur.settings.SettingsFragment">
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/setting_textview"
                 android:text="@string/settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/HeadlineStyle" android:id="@+id/setting_textview"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="8dp"
-                android:textSize="30sp"
-                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>

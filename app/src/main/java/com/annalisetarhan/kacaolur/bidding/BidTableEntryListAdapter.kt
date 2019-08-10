@@ -1,9 +1,12 @@
 package com.annalisetarhan.kacaolur.bidding
 
 import android.content.Context
+import android.text.Html
+import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.annalisetarhan.kacaolur.R
@@ -78,12 +81,15 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
         }
 
         private fun displayBid(entry: BidTableEntry) {
-            val price = context.resources.getString(R.string.delivery_price_header, entry.deliveryPrice)
+            val deliveryPrice = context.resources.getString(R.string.delivery_price_header_bold, entry.deliveryPrice)
             val timeString = Time(entry.deliveryTimeInSeconds!!).getTimeInMinutes()
-            val timeFormatted = context.resources.getString(R.string.delivery_time_header, timeString)
+            val deliveryTime = context.resources.getString(R.string.delivery_time_header_bold, timeString)
+
+            val priceFormatted = HtmlCompat.fromHtml(deliveryPrice, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            val timeFormatted = HtmlCompat.fromHtml(deliveryTime, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
             binding.courierNameFormatted = entry.courierName
-            binding.deliveryPriceFormatted = price
+            binding.deliveryPriceFormatted = priceFormatted
             binding.deliveryTimeFormatted = timeFormatted
         }
 

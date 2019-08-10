@@ -51,7 +51,7 @@ class WaitingFragment : Fragment() {
         val deliveryTime = Time(sharedPrefs.getInt("delivery_time_in_seconds", 0))
         val deliveryTimeInMinutes = deliveryTime.getTimeInMinutes()
 
-        binding.bidInstructionsWithName = getString(R.string.bid_accepted_instructions, courierName)
+        binding.courierNameFormatted = courierName
         binding.deliveryPriceFormatted = getString(R.string.delivery_price_header, deliveryPrice)
         binding.deliveryTimeFormatted = getString(R.string.delivery_time_header, deliveryTimeInMinutes)
     }

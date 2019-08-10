@@ -56,7 +56,7 @@
                 android:id="@+id/action_paymentFragment_to_confirmingFragment"
                 app:destination="@id/confirmingFragment"/>
         <action android:id="@+id/action_paymentFragment_to_waitingFragment"
-                app:destination="@id/waitingFragment"/>
+                app:destination="@id/waitingFragment" app:popUpTo="@+id/waitingFragment" app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment

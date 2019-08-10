@@ -7,24 +7,97 @@
         <variable name="delivery_time_for_countdown" type="String"/>
         <variable name="delivery_price_formatted" type="String"/>
         <variable name="delivery_time_formatted" type="String"/>
-        <variable name="bid_instructions_with_name" type="String"/>
+        <variable name="courier_name_formatted" type="String"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
 
         <TextView
-                android:text="@{delivery_time_for_countdown}"
+                android:id="@+id/wait"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/countdown_timer"
-                android:textAlignment="center"
-                android:textSize="80sp"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wait" style="@style/HeadlineStyle"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"/>
+
+        <View android:id="@+id/top_divider"
+              style="@style/Divider"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/wait"
+              app:layout_constraintBottom_toTopOf="@id/delivery_info_linear_layout"/>
+
+        <LinearLayout
+                android:id="@+id/delivery_info_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/top_divider"
+                app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+            <TextView
+                    android:id="@+id/courier_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{courier_name_formatted}"
+                    style="@style/ItemInfoStyle"/>
+
+            <TextView
+                    android:id="@+id/delivery_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/ItemInfoStyle"
+                    android:layout_marginTop="4dp"
+                    android:text="@{delivery_price_formatted}" tools:text="Delivery price: 5 lira"/>
+            <TextView
+                    android:id="@+id/delivery_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/ItemInfoStyle"
+                    android:text="@{delivery_time_formatted}" tools:text="Delivery time: 30 min"/>
+            <Button
+                    android:id="@+id/cheater_button"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Cheater Button"
+                    android:layout_gravity="center"
+                    android:textSize="1sp"
+                    android:visibility="gone"/>
+        </LinearLayout>
+
+        <View android:id="@+id/bottom_divider"
+              style="@style/Divider"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/delivery_info_linear_layout"/>
+
+        <androidx.cardview.widget.CardView
+                android:id="@+id/timer_cardview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/bottom_divider"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="visible"/>
+                app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                    android:id="@+id/countdown_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="@{delivery_time_for_countdown}"
+                    android:textAlignment="center"
+                    android:textSize="70sp"
+                    android:visibility="visible"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"/>
+
+        </androidx.cardview.widget.CardView>
 
         <Button
                 android:id="@+id/inspect_item_button"
@@ -33,73 +106,23 @@
                 android:text="@string/inspect_item"
                 android:gravity="center"
                 android:textSize="40sp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bottom_divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="invisible" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/instructionsCardView"/>
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/instructionsCardView"
-                app:layout_constraintTop_toBottomOf="@id/countdown_timer"
-                android:padding="8dp"
-                app:cardUseCompatPadding="true">
-
-            <TextView
-                    android:text="@{bid_instructions_with_name}"
-                    tools:text="Your courier is on it! You'll be able to approve your item's price before it is purchased."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/bid_accepted_instructions"
-                    android:textAlignment="center"
-                    android:padding="8dp"/>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/orderInfoCardView"
-                app:layout_constraintTop_toBottomOf="@id/instructionsCardView"
-                android:padding="6dp"
-                app:cardUseCompatPadding="true">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                <TextView
-                        android:text="@{delivery_price_formatted}"
-                        tools:text="Delivery price: 5 lira"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/delivery_price"/>
-                <TextView
-                        android:text="@{delivery_time_formatted}"
-                        tools:text="Delivery time: 30 min"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/delivery_time"/>
-                <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/cheater_button"
-                        android:text="Cheater Button"
-                        android:layout_gravity="center"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
+                android:visibility="invisible" android:layout_marginBottom="8dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="0dp" android:id="@+id/courierMessageRecyclerView"
+                android:id="@+id/courierMessageRecyclerView"
+                android:layout_width="match_parent" android:layout_height="0dp"
                 android:padding="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/chatbox_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/orderInfoCardView"/>
+                app:layout_constraintTop_toBottomOf="@id/timer_cardview"/>
 
         <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:id="@+id/chatbox_layout"
+                android:id="@+id/chatbox_layout"
+                android:layout_width="0dp" android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -107,9 +130,9 @@
                 app:layout_constraintBottom_toBottomOf="parent">
 
             <EditText
+                    android:id="@+id/chatbox_edittext"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" android:id="@+id/chatbox_edittext"
+                    android:layout_height="wrap_content" android:layout_weight="1"
                     android:hint="@string/enter_message"
                     android:inputType="text"
                     android:layout_gravity="center"
@@ -118,9 +141,9 @@
                     android:maxLines="6"/>
 
             <Button
+                    android:id="@+id/send_message_button"
                     android:layout_width="64dp"
                     android:layout_height="48dp"
-                    android:id="@+id/send_message_button"
                     android:text="@string/send"
                     android:textSize="14sp"
                     android:gravity="center"
