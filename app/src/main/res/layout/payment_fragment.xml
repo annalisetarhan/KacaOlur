@@ -25,8 +25,7 @@
                 android:id="@+id/imageView" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp" android:layout_marginTop="30dp"
-                app:layout_constraintTop_toBottomOf="@+id/payment_textview"
-        />
+                app:layout_constraintTop_toBottomOf="@+id/payment_textview"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -39,23 +38,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/item_price_textview"
                     android:text="@{item_price_formatted}"
-                    tools:text="Item Price:           8.00"
+                    tools:text="Item Price: 8.00"
+                    android:textAlignment="center"
                     android:layout_marginStart="16dp"
-                    android:textSize="30sp"/>
+                    android:textSize="24sp"/>
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/delivery_price_textview"
                     android:text="@{delivery_price_formatted}"
                     android:layout_marginStart="16dp"
-                    tools:text="Delivery Price:     3.00"
-                    android:textSize="30sp"/>
+                    android:textAlignment="center"
+                    tools:text="Delivery Price: 3.00"
+                    android:textSize="24sp"/>
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/total_price_textview"
                     android:text="@{total_price_formatted}"
-                    tools:text="Total Price:      11.00"
+                    tools:text="Total Price: 11.00"
                     android:layout_marginTop="24dp"
                     android:textAlignment="center"
                     android:textSize="30sp" android:textStyle="bold"/>

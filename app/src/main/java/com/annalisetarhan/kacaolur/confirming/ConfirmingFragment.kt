@@ -42,7 +42,7 @@ class ConfirmingFragment : Fragment() {
     private fun getItemPrice() {
         val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val itemPrice = sharedPrefs.getFloat("item_price", 5.50f)
-        val itemPriceFormatted = getString(R.string.item_price_header, itemPrice)
+        val itemPriceFormatted = getString(R.string.item_price_fiyat, itemPrice)
         binding.itemPriceFormatted = itemPriceFormatted
     }
 
@@ -107,7 +107,7 @@ class ConfirmingFragment : Fragment() {
     }
 
     private fun askForReason() {
-        val toast = Toast.makeText(context, "Please tell your courier how to fix the problem.", Toast.LENGTH_LONG)
+        val toast = Toast.makeText(context, getString(R.string.tell_courier_how_to_fix), Toast.LENGTH_LONG)
         toast.setGravity(Gravity.BOTTOM, 0, 300)
         toast.show()
     }

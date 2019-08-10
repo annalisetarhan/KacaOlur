@@ -66,7 +66,7 @@ class WaitingFragment : Fragment() {
     }
 
     private fun setUpCountdownTimer() {
-        binding.countdownTimer.visibility = View.VISIBLE
+        binding.timerCardview.visibility = View.VISIBLE
         binding.inspectItemButton.visibility = View.GONE
 
         viewModel.setUpCountdownTimer(context!!)
@@ -76,7 +76,7 @@ class WaitingFragment : Fragment() {
     }
 
     private fun setUpInspectItemButton() {
-        binding.countdownTimer.visibility = View.INVISIBLE
+        binding.timerCardview.visibility = View.INVISIBLE
         binding.inspectItemButton.visibility = View.VISIBLE
 
         binding.inspectItemButton.setOnClickListener {

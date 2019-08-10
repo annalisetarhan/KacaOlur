@@ -85,6 +85,7 @@
                 android:id="@+id/view_order_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="false"
                 android:text="@string/view_order" android:textSize="30sp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/constraint_layout"

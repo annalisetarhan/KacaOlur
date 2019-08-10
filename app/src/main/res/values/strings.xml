@@ -1,60 +1,62 @@
 <resources>
-    <string name="app_name">Kaca Olur</string>
-    <string name="order">Order</string>
+    <string name="app_name">Kaça Olur</string>
+    <string name="order">Sipariş</string>
     <string name="what_do_you_need">Ne lazım?</string>
-    <string name="item_description">size, brand, type</string>
-    <string name="attach_picture_button">"Attach Picture"</string>
+    <string name="other_details">Detaylar:</string>
+    <string name="item_description">Kaç tane? Kaç kilo? Hangi marka?</string>
+    <string name="attach_picture_button">"Fotoğraf Ekle"</string>
     <string name="kaca_olur">Kaça Olur?</string>
 
-    <string name="choose">Choose</string>
+    <string name="choose">Teklif Seç</string>
     <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"</string>
-    <string name="item_name_header">Item name: %1$s</string>
-    <string name="item_description_header">Item description: %1$s</string>
+    <string name="item_name_header">Ürün adı: %1$s</string>
+    <string name="item_description_header">Ürün açıklaması: %1$s</string>
 
     <string name="courier_name">%s</string>
-    <string name="delivery_price_header_bold">"Delivery Price: &lt;b> %1$.2f lira &lt;/b>"</string>
-    <string name="delivery_time_header_bold">"Delivery Time: &lt;b> %s minutes "&lt;/b>"</string>
-    <string name="accept_bid">Accept Bid</string>
+    <string name="delivery_price_header_bold">"Teslimat ücreti: &lt;b> %1$.2f lira &lt;/b>"</string>
+    <string name="delivery_time_header_bold">"Teslimat süresi: &lt;b> %s dakika "&lt;/b>"</string>
+    <string name="accept_bid">Kabul et</string>
 
-    <string name="delivery_price_header">Delivery Price: %1$.2f lira</string>
-    <string name="delivery_time_header">Delivery Time: %s minutes</string>
+    <string name="item_price_header">"Ürün ücreti: %1$.2f"</string>
+    <string name="delivery_price_header">Teslimat ücreti: %1$.2f lira</string>
+    <string name="delivery_time_header">Teslimat süresi: %s dakika</string>
 
-    <string name="question_header">Question: %s </string>
-    <string name="answer_question_button">Answer</string>
-    <string name="edit_text_answer_header">Answer: </string>
-    <string name="submit_answer">Submit</string>
-    <string name="saved_answer_header">Answer: %s </string>
+    <string name="question_header">Soru: %s </string>
+    <string name="answer_question_button">Cevapla</string>
+    <string name="edit_text_answer_header">Cevap: </string>
+    <string name="submit_answer">Cevapla</string>
+    <string name="saved_answer_header">Cevap: %s </string>
     <string name="shared_prefs_filename">"com.annalisetarhan.kacaolur.prefs"</string>
-    <string name="save_answer_button_text">Save</string>
+    <string name="save_answer_button_text">Gönder</string>
 
     <string name="bid_accepted">"Bid Accepted"</string>
     <string name="bid_accepted_instructions">"%s is on it! You\'ll be able to approve your item's price before it is purchased"</string>
-    <string name="view_order">"View Order"</string>
+    <string name="view_order">"SiPARiŞiM"</string>
     <string name="courier_profile_picture_text_description">Courier profile picture</string>
 
     <string name="mm_ss">"%1$s:%2$s"</string>
     <string name="hh_mm">"%1$s:%2$s"</string>
     <string name="hh_mm_ss">"%1$s:%2$s:%3$s</string>
     <string name="add_zero">0%1$d</string>
-    <string name="enter_message">Enter message</string>
-    <string name="send">SEND</string>
+    <string name="enter_message">Mesaj yaz</string>
+    <string name="send">Gönder</string>
 
-    <string name="item_price_header">"Price: %.02f"</string>
-    <string name="reject">Reject</string>
-    <string name="accept">Accept</string>
-    <string name="geri">Geri</string>
-    <string name="gonder">Gonder</string>
-    <string name="oh_no_what_s_wrong">Oh no! What\'s wrong?</string>
-    <string name="inspect_item">Inspect Item</string>
-    <string name="retake_picture">Retake Picture</string>
-    <string name="payment">Pay</string>
-    <string name="confirm">Confirm</string>
-    <string name="pay">Pay</string>
+    <string name="item_price_fiyat">"Ürün fiyatı: %.02f"</string>
+    <string name="reject">Reddet</string>
+    <string name="accept">Kabul Et</string>
+    <string name="geri">GERi</string>
+    <string name="gonder">Gönder</string>
+    <string name="oh_no_what_s_wrong">Sorun ne?</string>
+    <string name="inspect_item">Onayla</string>
+    <string name="retake_picture">Fotoğraf Ekle</string>
+    <string name="payment">Ödeme</string>
+    <string name="confirm">Onayla</string>
+    <string name="pay">Ödeme</string>
 
     <string name="reason_for_rejection">"Reason for rejection: %1$s</string>
     <string name="courier_s_item_picture">Courier\'s item picture</string>
 
-    <string name="total_price_header">"Total price: %.2f"</string>
+    <string name="total_price_header">"Toplam Ücret: %.2f"</string>
     <string name="payment_confirmed">"Payment confirmed!"</string>
     <string name="cancel_order">Cancel Order</string>
     <string name="settings">Settings</string>
@@ -63,8 +65,8 @@
     <string name="phone_number">Phone Number:</string>
     <string name="sample_phone_number">+90 542 549 54 79</string>
     <string name="sample_username">Görkem Tarhan</string>
-    <string name="wait">Wait</string>
+    <string name="wait">Kalan Süre</string>
     <string name="item_name">Item name:</string>
-    <string name="other_details">Other details?</string>
     <string name="submitted_picture">Submitted picture</string>
+    <string name="tell_courier_how_to_fix">Lütfen sorunun ne olduğunu kuryenize bildiriniz.</string>
 </resources>
