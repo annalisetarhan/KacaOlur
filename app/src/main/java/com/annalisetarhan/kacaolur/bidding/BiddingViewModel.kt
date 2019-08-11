@@ -41,7 +41,6 @@ class BiddingViewModel(application: Application) : AndroidViewModel(application)
         editor.putString("time_bid_accepted_string", Time().getStringForSharedPrefs(context))
         editor.putInt("time_paused_in_seconds", 0)
         editor.putBoolean("has_accepted_bid", true)
-        println("I just said it's true!")
         editor.apply()
     }
 }

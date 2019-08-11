@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.annalisetarhan.kacaolur.R
@@ -80,7 +81,9 @@ class WaitingFragment : Fragment() {
         binding.inspectItemButton.visibility = View.VISIBLE
 
         binding.inspectItemButton.setOnClickListener {
-            findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.waitingFragment) {
+                findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+            }
         }
     }
 
@@ -105,7 +108,9 @@ class WaitingFragment : Fragment() {
     private fun setUpCheaterButton() {
         binding.cheaterButton.setOnClickListener {
             viewModel.pauseTimer(context!!)
-            findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.waitingFragment) {
+                findNavController().navigate(R.id.action_waitingFragment_to_confirmingFragment)
+            }
         }
     }
 

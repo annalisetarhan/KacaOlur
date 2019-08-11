@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.ConfirmingFragmentBinding
@@ -62,7 +63,9 @@ class ConfirmingFragment : Fragment() {
 
     private fun setAcceptButton() {
         binding.acceptButton.setOnClickListener {
-            findNavController().navigate(R.id.action_confirmingFragment_to_paymentFragment)
+            if (it.findNavController().currentDestination?.id == R.id.confirmingFragment) {
+                findNavController().navigate(R.id.action_confirmingFragment_to_paymentFragment)
+            }
         }
     }
 
@@ -95,15 +98,13 @@ class ConfirmingFragment : Fragment() {
             if (complaintString == "") {
                 askForReason()
             } else {
-                acceptRejection(complaintString)
+                viewModel.itemRejected(context!!, complaintString)
+                // TODO: fill in server
+                if (it.findNavController().currentDestination?.id == R.id.confirmingFragment) {
+                    findNavController().navigate(R.id.action_confirmingFragment_to_waitingFragment)
+                }
             }
         }
-    }
-
-    private fun acceptRejection(complaint: String) {
-        viewModel.itemRejected(context!!, complaint)
-        findNavController().navigate(R.id.action_confirmingFragment_to_waitingFragment)
-        // TODO: fill in server
     }
 
     private fun askForReason() {

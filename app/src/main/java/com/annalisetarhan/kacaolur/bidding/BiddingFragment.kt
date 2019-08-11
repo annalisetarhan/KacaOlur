@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.annalisetarhan.kacaolur.R
@@ -96,14 +97,19 @@ class BiddingFragment : Fragment() {
     private fun watchForAcceptedBid() {
         adapter.acceptedBid.observe(this, Observer { acceptedBid ->
             viewModel.saveAcceptedBid(acceptedBid)
-            findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+            // Does "this" work here too? The code I copied used it
+            if (this.findNavController().currentDestination?.id == R.id.biddingFragment) {
+                findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+            }
         })
     }
 
     private fun showViewOrderButton() {
         binding.viewOrderButton.visibility = View.VISIBLE
         binding.viewOrderButton.setOnClickListener {
-            findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.biddingFragment) {
+                findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
+            }
         }
     }
 }

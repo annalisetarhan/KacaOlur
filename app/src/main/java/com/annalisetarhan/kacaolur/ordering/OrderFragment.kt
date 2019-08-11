@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.OrderFragmentBinding
@@ -77,7 +78,9 @@ class OrderFragment : Fragment() {
 
     private fun setUpSterileKacaButton() {
         binding.kacaButton.setOnClickListener {
-            findNavController().navigate(R.id.action_orderFragment_to_biddingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.orderFragment) {
+                findNavController().navigate(R.id.action_orderFragment_to_biddingFragment)
+            }
         }
     }
 
@@ -91,7 +94,6 @@ class OrderFragment : Fragment() {
         if (viewModel.hasPicture) {
             val photoUri = viewModel.getPhotoUri()
             imageView.setImageURI(photoUri)
-            println("should have set imageView")
         }
     }
 
@@ -191,14 +193,12 @@ class OrderFragment : Fragment() {
             if (itemName == "") {
                 insistOnItemName()
             } else {
-                acceptOrder(order)
+                viewModel.acceptOrder(order)
+                if (it.findNavController().currentDestination?.id == R.id.orderFragment) {
+                    findNavController().navigate(R.id.action_orderFragment_to_biddingFragment)
+                }
             }
         }
-    }
-
-    private fun acceptOrder(order: Order) {
-        viewModel.acceptOrder(order)
-        findNavController().navigate(R.id.action_orderFragment_to_biddingFragment)
     }
 
     private fun insistOnItemName() {

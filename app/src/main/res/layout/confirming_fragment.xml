@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{item_price_formatted}" tools:text="Price 5.50"
+                android:textStyle="italic"
                 app:layout_constraintTop_toBottomOf="@id/top_divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

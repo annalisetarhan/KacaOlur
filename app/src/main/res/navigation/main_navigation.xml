@@ -43,7 +43,7 @@
             android:label="ConfirmingFragment">
         <action android:id="@+id/action_confirmingFragment_to_waitingFragment"
                 app:destination="@id/waitingFragment"
-                app:popUpTo="@+id/waitingFragment"/>
+                app:popUpTo="@+id/waitingFragment" app:popUpToInclusive="true"/>
         <action android:id="@+id/action_confirmingFragment_to_paymentFragment"
                 app:destination="@id/paymentFragment"/>
     </fragment>

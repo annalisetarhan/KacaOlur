@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.PaymentFragmentBinding
@@ -40,11 +41,15 @@ class PaymentFragment : Fragment() {
 
     private fun setUpButtons() {
         binding.geriButton.setOnClickListener {
-            findNavController().navigate(R.id.action_paymentFragment_to_confirmingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.paymentFragment) {
+                findNavController().navigate(R.id.action_paymentFragment_to_confirmingFragment)
+            }
         }
         binding.payButton.setOnClickListener {
             viewModel.pay(context!!)
-            findNavController().navigate(R.id.action_paymentFragment_to_waitingFragment)
+            if (it.findNavController().currentDestination?.id == R.id.paymentFragment) {
+                findNavController().navigate(R.id.action_paymentFragment_to_waitingFragment)
+            }
         }
     }
 }

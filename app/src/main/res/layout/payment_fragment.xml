@@ -41,6 +41,7 @@
                     android:id="@+id/item_price_textview"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="@{item_price_formatted}"
+                    android:textStyle="italic"
                     tools:text="Item Price: 8.00"
                     android:textAlignment="center"
                     android:layout_marginStart="16dp"
@@ -49,6 +50,7 @@
             <TextView
                     android:id="@+id/delivery_price_textview"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textStyle="italic"
                     android:text="@{delivery_price_formatted}"
                     android:layout_marginStart="16dp"
                     android:textAlignment="center"
@@ -97,6 +99,7 @@
                     android:textSize="24sp"
                     android:layout_marginEnd="30dp" android:layout_marginStart="30dp"
                     android:layout_weight="1"
+                    android:textAllCaps="false"
                     style="?android:attr/buttonBarButtonStyle"/>
             <Button
                     android:id="@+id/pay_button"
