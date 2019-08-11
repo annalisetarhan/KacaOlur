@@ -54,5 +54,3 @@
 
     </androidx.cardview.widget.CardView>
 </layout>
-
-        <!--android:text="@string/delivery_price_header"-->

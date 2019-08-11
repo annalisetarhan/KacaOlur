@@ -12,9 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="match_parent">
 
         <TextView
                 android:id="@+id/wait"
@@ -30,8 +28,7 @@
               style="@style/Divider"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/wait"
-              app:layout_constraintBottom_toTopOf="@id/delivery_info_linear_layout"/>
+              app:layout_constraintTop_toBottomOf="@id/wait"/>
 
         <LinearLayout
                 android:id="@+id/delivery_info_linear_layout"
@@ -39,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/top_divider"
-                app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+                android:layout_marginTop="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
 
@@ -98,8 +95,8 @@
                     android:textAlignment="center"
                     android:textSize="70sp"
                     android:visibility="visible"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"/>
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -146,8 +143,8 @@
 
             <Button
                     android:id="@+id/send_message_button"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/send"
                     android:textSize="14sp"
                     android:gravity="center"

@@ -33,8 +33,8 @@ class PaymentFragment : Fragment() {
     }
 
     private fun setPriceInfo() {
-        binding.itemPriceFormatted = getString(R.string.item_price_header, viewModel.itemPrice)
-        binding.deliveryPriceFormatted = getString(R.string.delivery_price_header , viewModel.deliveryPrice)
+        binding.itemPriceFormatted = getString(R.string.item_price_capitalized, viewModel.itemPrice)
+        binding.deliveryPriceFormatted = getString(R.string.delivery_price_capitalized , viewModel.deliveryPrice)
         binding.totalPriceFormatted = getString(R.string.total_price_header, viewModel.totalPrice)
     }
 

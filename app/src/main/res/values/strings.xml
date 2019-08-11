@@ -10,12 +10,15 @@
     <string name="choose">Teklif Seç</string>
     <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"</string>
     <string name="item_name_header">Ürün adı: %1$s</string>
-    <string name="item_description_header">Ürün açıklaması: %1$s</string>
+    <string name="item_description_header">Ürün detaylar: %1$s</string>
 
     <string name="courier_name">%s</string>
     <string name="delivery_price_header_bold">"Teslimat ücreti: &lt;b> %1$.2f lira &lt;/b>"</string>
     <string name="delivery_time_header_bold">"Teslimat süresi: &lt;b> %s dakika "&lt;/b>"</string>
     <string name="accept_bid">Kabul et</string>
+
+    <string name="item_price_capitalized">"Ürün Ücreti: %1$.2f"</string>
+    <string name="delivery_price_capitalized">Teslimat Ücreti: %1$.2f lira</string>
 
     <string name="item_price_header">"Ürün ücreti: %1$.2f"</string>
     <string name="delivery_price_header">Teslimat ücreti: %1$.2f lira</string>
