@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable name="item_name_formatted" type="String"/>
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:text="@string/bid_list_instructions"
-                tools:text="Bids will appear here. Accept the first one you get, or wait for a better one. Couriers will also be able to ask questions."
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/view_order_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

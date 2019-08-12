@@ -8,7 +8,7 @@
     <string name="kaca_olur">Kaça Olur?</string>
 
     <string name="choose">Teklif Seç</string>
-    <string name="bid_list_instructions">"Bids for your item will appear here. Accept the first one you get or wait for an even better one!"</string>
+    <string name="bid_list_instructions">"Bids for your item will appear here.\nAccept the first one you get or wait for an even better one!"</string>
     <string name="item_name_header">Ürün adı: %1$s</string>
     <string name="item_description_header">Ürün detaylar: %1$s</string>
 

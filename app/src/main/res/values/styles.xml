@@ -12,7 +12,7 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="Divider">
+    <style name="Divider" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?android:attr/listDivider</item>
@@ -22,7 +22,7 @@
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
-    <style name="ItemInfoStyle">
+    <style name="ItemInfoStyle" parent="AppTheme">
         <item name="android:gravity">center</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textSize">16sp</item>

@@ -27,6 +27,8 @@ class BiddingFragment : Fragment() {
     private lateinit var itemName: String
     private var itemDescription: String? = null
 
+    private var bidListIsEmpty = true
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
@@ -39,6 +41,10 @@ class BiddingFragment : Fragment() {
     private fun watchForChangesInBidTable() {
         viewModel.allEntries.observe(this, Observer { entries ->
             entries?.let { adapter.setEntries(it) }
+            if (bidListIsEmpty &&  entries.isNotEmpty()) {                 // Part of trying to set up "wait for bids" screen
+                bidListIsEmpty = false                                     // Can't say for sure if this will work once data is live.
+                hideWaitForBidsMessage()                                   // Everything "bidListIsEmpty" in this frag is suspect
+            }
         })
     }
 
@@ -54,6 +60,10 @@ class BiddingFragment : Fragment() {
             showViewOrderButton()
         } else {
             setLiveDataObservers()
+        }
+
+        if (bidListIsEmpty) {
+            showWaitForBidsMessage()
         }
     }
 
@@ -75,7 +85,6 @@ class BiddingFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
         val hasAcceptedBid = sharedPrefs.getBoolean("has_accepted_bid", false)
         adapter = BidTableEntryListAdapter(context!!, hasAcceptedBid)
         recyclerView.adapter = adapter
@@ -88,7 +97,6 @@ class BiddingFragment : Fragment() {
     }
 
     private fun watchForNewAnswers() {
-        // I'm still iffy on this. I think it works, but if related things break, look here first
         adapter.newAnswer.observe(this, Observer { answer ->
             viewModel.addAnswer(answer, adapter.answeredEntry.value!!.rowNum)
         })
@@ -97,7 +105,6 @@ class BiddingFragment : Fragment() {
     private fun watchForAcceptedBid() {
         adapter.acceptedBid.observe(this, Observer { acceptedBid ->
             viewModel.saveAcceptedBid(acceptedBid)
-            // Does "this" work here too? The code I copied used it
             if (this.findNavController().currentDestination?.id == R.id.biddingFragment) {
                 findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
             }
@@ -111,5 +118,15 @@ class BiddingFragment : Fragment() {
                 findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)
             }
         }
+    }
+
+    private fun showWaitForBidsMessage() {
+        binding.recyclerView.visibility = View.GONE
+        binding.waitForBidsTextview.visibility = View.VISIBLE
+    }
+
+    private fun hideWaitForBidsMessage() {
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.waitForBidsTextview.visibility = View.GONE
     }
 }
