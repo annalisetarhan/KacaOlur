@@ -1,9 +1,22 @@
 <resources>
     <string name="app_name">Kaça Olur</string>
+
+    <string name="welcome">Hoş Geldiniz</string>
+    <string name="enter_button_text">GÖNDER</string>
+    <string name="back_button_text">GERi</string>
+    <string name="evet_button_text">EVET</string>
+    <string name="start_button_text">BAŞLA</string>
+    <string name="verification_code_hint">Koda:</string>
+    <string name="need_your_phone_number">"We need your phone number to create your account or to log you in."</string>
+    <string name="may_we_send_sms">"May we send you an SMS to confirm your number? Standard rates apply."</string>
+    <string name="code_is_coming">"Great! A four digit code is on its way. Please enter it below. It may take a minute or two to arrive."</string>
+    <string name="choose_display_name">"Success! What should we call you? This will be visible to couriers."</string>
+    <string name="nice_to_meet_you">"Nice to meet you, %1$s. Ready to place an order?"</string>
+
     <string name="order">Sipariş</string>
     <string name="what_do_you_need">Ne lazım?</string>
     <string name="other_details">Detaylar:</string>
-    <string name="item_description">Kaç tane? Kaç kilo? Hangi marka?</string>
+    <string name="item_description">Kaç tane? Kaç kilo? Hangi marketten? Hangi marka?</string>
     <string name="attach_picture_button">"Fotoğraf Ekle"</string>
     <string name="kaca_olur">Kaça Olur?</string>
 
@@ -66,10 +79,11 @@
     <string name="help">Help</string>
     <string name="display_name">Display Name:</string>
     <string name="phone_number">Phone Number:</string>
-    <string name="sample_phone_number">+90 542 549 54 79</string>
+    <string name="sample_phone_number">542 549 5479</string>
     <string name="sample_username">Görkem Tarhan</string>
     <string name="wait">Kalan Süre</string>
     <string name="item_name">Item name:</string>
     <string name="submitted_picture">Submitted picture</string>
     <string name="tell_courier_how_to_fix">Lütfen sorunun ne olduğunu kuryenize bildiriniz.</string>
+    <string name="enter_phone_number">Enter your phone number to create an account or to log in.</string>
 </resources>

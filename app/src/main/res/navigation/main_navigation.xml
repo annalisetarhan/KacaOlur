@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main_navigation"
-        app:startDestination="@id/orderFragment">
+        app:startDestination="@id/authFragment">
 
     <fragment
             android:id="@+id/orderFragment"
@@ -64,4 +64,8 @@
             android:name="com.annalisetarhan.kacaolur.settings.SettingsFragment"
             android:label="SettingsFragment"
             tools:layout="@layout/settings_fragment"/>
+    <fragment android:id="@+id/authFragment" android:name="com.annalisetarhan.kacaolur.authing.AuthFragment"
+              android:label="AuthFragment">
+        <action android:id="@+id/action_authFragment_to_orderFragment" app:destination="@id/orderFragment"/>
+    </fragment>
 </navigation>

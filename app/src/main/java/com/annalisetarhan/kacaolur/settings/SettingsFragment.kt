@@ -17,3 +17,5 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 }
+
+// TODO: needs a logout/change account button and a change display name option

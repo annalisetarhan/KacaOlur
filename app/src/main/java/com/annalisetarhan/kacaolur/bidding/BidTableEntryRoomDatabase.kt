@@ -51,7 +51,7 @@ abstract class BidTableEntryRoomDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(bidTableEntryDao: BidTableEntryDao) {
             bidTableEntryDao.deleteAll()
-/*
+
             val bid = BidTableEntry(0,"Mehmet T.", true, 9.00f, 1200, null, null)
             val question = BidTableEntry(0, "Mehmet B.", false, null, null, "Kaç tane?", null)
             val bidAgain = BidTableEntry(0, "Mehmet E.", true, 5.00f, 1800, null, null)
@@ -61,7 +61,6 @@ abstract class BidTableEntryRoomDatabase : RoomDatabase() {
             bidTableEntryDao.insert(question)
             bidTableEntryDao.insert(bidAgain)
             bidTableEntryDao.insert(questionAgain)
-*/
         }
     }
 }

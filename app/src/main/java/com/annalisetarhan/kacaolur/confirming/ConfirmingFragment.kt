@@ -48,6 +48,7 @@ class ConfirmingFragment : Fragment() {
     }
 
     private fun loadPicture() {
+        // TODO: Loading picture
         Picasso
             .get()
             .load(salcaUrl)

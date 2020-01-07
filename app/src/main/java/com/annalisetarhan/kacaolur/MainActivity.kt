@@ -9,22 +9,24 @@ import androidx.navigation.ui.onNavDestinationSelected
 
 class MainActivity : AppCompatActivity() {
 
-    private val userID = "user_id"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        /*
         val sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_filename), 0)
 
-        if (sharedPreferences.getLong(userID, 0) != 0L) {
+        if (sharedPreferences.getString(phoneNum, "") != "") {
             setContentView(R.layout.activity_main)
         } else {
             // TODO Implement Login fragment
             val editor = sharedPreferences.edit()
-            editor.putLong(userID, 1)
+            editor.putString(phoneNum, )
             editor.apply()
             setContentView(R.layout.activity_main)
         }
+        */
+
+        setContentView(R.layout.activity_main)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

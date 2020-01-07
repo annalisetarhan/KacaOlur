@@ -15,3 +15,5 @@ data class BidTableEntry(
     @ColumnInfo(name = "question") val question: String?,
     @ColumnInfo(name = "answer") val answer: String?
 )
+
+// Probably going to want to add time_submitted
