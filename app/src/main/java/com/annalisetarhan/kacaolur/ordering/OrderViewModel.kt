@@ -41,17 +41,21 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
         // TODO: send photo to server
     }
 
-    fun getItemName(): String {
+    fun getItemName(): String? {
         return sharedPrefs.getString("item_name", "")
     }
 
-    fun getItemDescription(): String {
+    fun getItemDescription(): String? {
         return sharedPrefs.getString("item_description", "")
     }
 
     fun getPhotoUri(): Uri {
         val uriString = sharedPrefs.getString("photo_uri", "")
         return Uri.parse(uriString)
+    }
+
+    fun nukeData() {
+        sharedPrefs.edit().clear().apply()      // FOR TESTING ONLY
     }
 }
 

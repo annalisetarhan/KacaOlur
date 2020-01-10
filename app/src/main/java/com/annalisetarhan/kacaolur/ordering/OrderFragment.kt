@@ -192,6 +192,8 @@ class OrderFragment : Fragment() {
 
             if (itemName == "") {
                 insistOnItemName()
+            } else if (itemName == "0000") {        // FOR TESTING ONLY
+                    viewModel.nukeData()
             } else {
                 viewModel.acceptOrder(order)
                 if (it.findNavController().currentDestination?.id == R.id.orderFragment) {

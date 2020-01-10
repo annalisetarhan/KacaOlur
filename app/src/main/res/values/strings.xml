@@ -10,8 +10,10 @@
     <string name="need_your_phone_number">"We need your phone number to create your account or to log you in."</string>
     <string name="may_we_send_sms">"May we send you an SMS to confirm your number? Standard rates apply."</string>
     <string name="code_is_coming">"Great! A four digit code is on its way. Please enter it below. It may take a minute or two to arrive."</string>
+    <string name="sorry_username_taken">"Sorry, %1$s is already using Kaça Olur. Please choose another username."</string>
     <string name="choose_display_name">"Success! What should we call you? This will be visible to couriers."</string>
-    <string name="nice_to_meet_you">"Nice to meet you, %1$s. Ready to place an order?"</string>
+    <string name="nice_to_meet_you">"Nice to meet you, %1$s. Ready to get started?"</string>
+    <string name="welcome_back">"Welcome back, %1$s. Ready to place an order?"</string>
 
     <string name="order">Sipariş</string>
     <string name="what_do_you_need">Ne lazım?</string>
@@ -86,4 +88,9 @@
     <string name="submitted_picture">Submitted picture</string>
     <string name="tell_courier_how_to_fix">Lütfen sorunun ne olduğunu kuryenize bildiriniz.</string>
     <string name="enter_phone_number">Enter your phone number to create an account or to log in.</string>
+    <string name="numara_degis">Numara Değiş</string>
+    <string name="basla">başla</string>
+    <string name="please_choose_a_display_name">Please choose a display name</string>
+    <string name="choose_longer_username">Please choose a display name at least four characters long.</string>
+    <string name="please_enter_code">Please enter the four digit code texted to you.</string>
 </resources>
