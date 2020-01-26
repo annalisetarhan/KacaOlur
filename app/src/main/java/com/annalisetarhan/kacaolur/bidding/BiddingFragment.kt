@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,30 +20,30 @@ class BiddingFragment : Fragment() {
 
     private lateinit var binding: BiddingFragmentBinding
     private lateinit var viewModel: BiddingViewModel
-    private lateinit var adapter: BidTableEntryListAdapter
+    private lateinit var adapter: CourierResponseListAdapter
 
     private lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var itemName: String
     private var itemDescription: String? = null
 
-    private var bidListIsEmpty = true
+    private var responseListIsEmpty = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(BiddingViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(BiddingViewModel::class.java)
 
-        watchForChangesInBidTable()
+        watchForChangesInResponseTable()
 
         return binding.root
     }
 
-    private fun watchForChangesInBidTable() {
+    private fun watchForChangesInResponseTable() {
         viewModel.allEntries.observe(this, Observer { entries ->
             entries?.let { adapter.setEntries(it) }
-            if (bidListIsEmpty &&  entries.isNotEmpty()) {                 // Part of trying to set up "wait for bids" screen
-                bidListIsEmpty = false                                     // Can't say for sure if this will work once data is live.
-                hideWaitForBidsMessage()                                   // Everything "bidListIsEmpty" in this frag is suspect
+            if (responseListIsEmpty &&  entries.isNotEmpty()) {                 // Part of trying to set up "wait for bids" screen
+                responseListIsEmpty = false                                     // Can't say for sure if this will work with real data
+                hideWaitForBidsMessage()
             }
         })
     }
@@ -62,7 +62,7 @@ class BiddingFragment : Fragment() {
             setLiveDataObservers()
         }
 
-        if (bidListIsEmpty) {
+        if (responseListIsEmpty) {
             showWaitForBidsMessage()
         }
     }
@@ -86,7 +86,7 @@ class BiddingFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         val hasAcceptedBid = sharedPrefs.getBoolean("has_accepted_bid", false)
-        adapter = BidTableEntryListAdapter(context!!, hasAcceptedBid)
+        adapter = CourierResponseListAdapter(context!!, hasAcceptedBid)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
@@ -98,7 +98,7 @@ class BiddingFragment : Fragment() {
 
     private fun watchForNewAnswers() {
         adapter.newAnswer.observe(this, Observer { answer ->
-            viewModel.addAnswer(answer, adapter.answeredEntry.value!!.rowNum)
+            viewModel.addAnswer(answer, adapter.answeredQuestion.value!!.splitSecondsSinceOrderPlaced)
         })
     }
 

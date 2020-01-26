@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.annalisetarhan.kacaolur.R
@@ -41,7 +41,7 @@ class OrderFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.order_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(OrderViewModel::class.java)
 
         return binding.root
     }
@@ -85,7 +85,7 @@ class OrderFragment : Fragment() {
     }
 
     private fun setUpNormalFragment() {
-        setUpAttachPictureButton()      // Consider disabling this for phones that don't have a camera
+        setUpAttachPictureButton()      // Consider disabling this for phones that don't have a camera (do those exist?)
         setUpKacaButton()
         addPicture()
     }
@@ -186,14 +186,15 @@ class OrderFragment : Fragment() {
 
     private fun setUpKacaButton() {
         binding.kacaButton.setOnClickListener {
-            val itemName = item_name_edit_text.text.toString()
-            val itemDescription = item_description_edit_text.text.toString()
+            val itemName = item_name_edit_text.text.toString().trim()
+            val itemDescription = item_description_edit_text.text.toString().trim()
             val order = Order(itemName, itemDescription)
 
             if (itemName == "") {
                 insistOnItemName()
             } else if (itemName == "0000") {        // FOR TESTING ONLY
-                    viewModel.nukeData()
+                viewModel.nukeData()
+                findNavController().navigate(R.id.action_orderFragment_to_welcomeFragment)
             } else {
                 viewModel.acceptOrder(order)
                 if (it.findNavController().currentDestination?.id == R.id.orderFragment) {

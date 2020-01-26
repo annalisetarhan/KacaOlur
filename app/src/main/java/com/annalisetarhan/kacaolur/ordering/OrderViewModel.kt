@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import com.annalisetarhan.kacaolur.R
+import com.annalisetarhan.kacaolur.utils.DateTime
 
 class OrderViewModel(application: Application): AndroidViewModel(application) {
     var orderSubmitted: Boolean
@@ -29,6 +30,7 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
         editor.putString("item_description", order.itemDescription)
         editor.putBoolean("order_submitted", true)
         editor.putBoolean("has_accepted_bid", false)
+        editor.putString("date_time_order_placed", DateTime().getString())
         editor.apply()
     }
 
