@@ -4,35 +4,35 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.annalisetarhan.kacaolur.R
-import com.annalisetarhan.kacaolur.Time
-import com.annalisetarhan.kacaolur.waiting.CourierMessage
+import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
+import com.annalisetarhan.kacaolur.utils.Time
 import com.annalisetarhan.kacaolur.waiting.CourierMessageRepository
-import com.annalisetarhan.kacaolur.waiting.CourierMessageRoomDatabase
+import com.annalisetarhan.kacaolur.utils.DateTime
+import com.annalisetarhan.kacaolur.waiting.CourierMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PaymentViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: CourierMessageRepository
-    private val sharedPrefs: SharedPreferences
+class PaymentViewModel @Inject constructor(
+    private val repository: CourierMessageRepository,
+    private val sharedPrefs: SharedPreferencesStorage
+) : ViewModel() {
+
     var itemPrice: Float
     val deliveryPrice: Float
     var totalPrice: Float
 
     init {
-        val context = getApplication<Application>().applicationContext
-        sharedPrefs = context.getSharedPreferences((R.string.shared_prefs_filename).toString(), 0)
-        itemPrice = sharedPrefs.getFloat("item_price", 0f)
-        deliveryPrice = sharedPrefs.getFloat("delivery_price", 5.5f)
+        itemPrice = sharedPrefs.getFloat("item_price")
+        deliveryPrice = sharedPrefs.getFloat("delivery_price")
         totalPrice = itemPrice + deliveryPrice
-
-        val messagesDao = CourierMessageRoomDatabase.getDatabase(application, viewModelScope).courierMessageDao()
-        repository = CourierMessageRepository(messagesDao)
     }
 
     fun update() {
-        itemPrice = sharedPrefs.getFloat("item_price", 0f)
+        itemPrice = sharedPrefs.getFloat("item_price")
         totalPrice = itemPrice + deliveryPrice
     }
 
@@ -43,20 +43,24 @@ class PaymentViewModel(application: Application) : AndroidViewModel(application)
 
     private fun recordPayment(context: Context) {
         val secondsPaused = Time().getSecondsPaused(context)
-        val editor = sharedPrefs.edit()
 
-        editor.putBoolean("payment_confirmed", true)
-        editor.putInt("time_paused_in_seconds", secondsPaused)
-        editor.putString("last_time_paused", "")
-        editor.putBoolean("waiting_for_item_inspection", false)
-
-        editor.apply()
+        sharedPrefs.setBoolean("payment_confirmed", true)
+        sharedPrefs.setInt("time_paused_in_seconds", secondsPaused)
+        sharedPrefs.setString("last_time_paused", "")
+        sharedPrefs.setBoolean("waiting_for_item_inspection", false)
     }
 
     private fun updateMessageThread(context: Context) = viewModelScope.launch(Dispatchers.IO) {
-        val timeStamp = Time().getTimestampString(context)
-        val paymentConfirmedString = context.resources.getString(R.string.payment_confirmed)
-        val courierMessage = CourierMessage(0, false, timeStamp, paymentConfirmedString)
-        repository.sendMessage(courierMessage)
+        val currentDateTime = DateTime()
+        val bidAcceptedDateTime = DateTime(sharedPrefs.getString("bid_accepted_datetime")!!)
+        repository.sendMessage(
+            CourierMessage(
+                currentDateTime.getSplitSecondsSince(bidAcceptedDateTime),
+                currentDateTime.getString(),
+                currentDateTime.getTimestampString(context),
+                false,
+                context.resources.getString(R.string.payment_confirmed)
+            )
+        )
     }
 }

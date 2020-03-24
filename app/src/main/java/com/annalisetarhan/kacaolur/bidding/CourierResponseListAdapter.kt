@@ -1,41 +1,49 @@
 package com.annalisetarhan.kacaolur.bidding
 
 import android.content.Context
-import android.text.Html
-import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.annalisetarhan.kacaolur.R
-import com.annalisetarhan.kacaolur.Time
-import com.annalisetarhan.kacaolur.databinding.BidListBidBinding
-import com.annalisetarhan.kacaolur.databinding.BidListQuestionBinding
+import com.annalisetarhan.kacaolur.utils.Time
+import com.annalisetarhan.kacaolur.databinding.ResponseListBidBinding
+import com.annalisetarhan.kacaolur.databinding.ResponseListQuestionBinding
 import java.lang.IllegalArgumentException
 
 const val BID = 1
 const val QUESTION = 2
 
-class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Boolean)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CourierResponseListAdapter(val context: Context, val shouldHideButtons: Boolean) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var entries = emptyList<BidTableEntry>()
+    private var responses = emptyList<CourierResponse>()
 
-    val newAnswer = MutableLiveData<String>()
-    val answeredEntry = MutableLiveData<BidTableEntry>()
-    val acceptedBid = MutableLiveData<BidTableEntry>()
+    private val _newAnswer = MutableLiveData<String>()
+    private val _answeredQuestion = MutableLiveData<CourierResponse>()
+    private val _acceptedBid = MutableLiveData<CourierResponse>()
+
+    val newAnswer: LiveData<String>
+        get() = _newAnswer
+
+    val answeredQuestion: LiveData<CourierResponse>
+        get() = _answeredQuestion
+
+    val acceptedBid: LiveData<CourierResponse>
+        get() = _acceptedBid
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             BID -> {
-                val binding = BidListBidBinding.inflate(inflater, parent, false)
+                val binding = ResponseListBidBinding.inflate(inflater, parent, false)
                 BidViewHolder(binding)
             }
             QUESTION -> {
-                val binding = BidListQuestionBinding.inflate(inflater, parent, false)
+                val binding = ResponseListQuestionBinding.inflate(inflater, parent, false)
                 QuestionViewHolder(binding)
             }
             else -> throw IllegalArgumentException("Invalid view type")
@@ -43,7 +51,7 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (entries[position].bidNotQuestion) {
+        return if (responses[position].bidNotQuestion) {
             BID
         } else {
             QUESTION
@@ -51,51 +59,50 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val current = entries[position]
+        val current = responses[position]
         when (holder) {
-            // This isn't redundant. The when statement causes a smart cast.
             is BidViewHolder -> holder.bind(current)
             is QuestionViewHolder -> holder.bind(current)
         }
     }
 
-    fun setEntries(entries: List<BidTableEntry>) {
-        this.entries = entries
+    fun setEntries(responses: List<CourierResponse>) {
+        this.responses = responses
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = entries.size
+    override fun getItemCount() = responses.size
 
     /*
      *      BID VIEW HOLDER
      */
 
-    inner class BidViewHolder(private val binding: BidListBidBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(entry: BidTableEntry) {
-            displayBid(entry)
+    inner class BidViewHolder(private val binding: ResponseListBidBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(response: CourierResponse) {
+            displayBid(response)
             if (shouldHideButtons) {
                 binding.acceptBidButton.visibility = View.GONE
             } else {
-                setUpAcceptBidButton(entry)
+                setUpAcceptBidButton(response)
             }
         }
 
-        private fun displayBid(entry: BidTableEntry) {
-            val deliveryPrice = context.resources.getString(R.string.delivery_price_header_bold, entry.deliveryPrice)
-            val timeString = Time(entry.deliveryTimeInSeconds!!).getTimeInMinutes()
+        private fun displayBid(response: CourierResponse) {
+            val deliveryPrice = context.resources.getString(R.string.delivery_price_header_bold, response.deliveryPrice)
+            val timeString = Time(response.deliveryTimeInSeconds!!).getTimeInMinutes()
             val deliveryTime = context.resources.getString(R.string.delivery_time_header_bold, timeString)
 
             val priceFormatted = HtmlCompat.fromHtml(deliveryPrice, HtmlCompat.FROM_HTML_MODE_LEGACY)
             val timeFormatted = HtmlCompat.fromHtml(deliveryTime, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-            binding.courierNameFormatted = entry.courierName
+            binding.courierNameFormatted = response.courierName
             binding.deliveryPriceFormatted = priceFormatted
             binding.deliveryTimeFormatted = timeFormatted
         }
 
-        private fun setUpAcceptBidButton(entry: BidTableEntry) {
+        private fun setUpAcceptBidButton(response: CourierResponse) {
             binding.acceptBidButton.setOnClickListener {
-                acceptedBid.value = entry
+                _acceptedBid.value = response
             }
         }
     }
@@ -104,21 +111,22 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
      *      QUESTION VIEW HOLDER
      */
 
-    inner class QuestionViewHolder(private val binding: BidListQuestionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class QuestionViewHolder(private val binding: ResponseListQuestionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(entry: BidTableEntry) {
+        fun bind(response: CourierResponse) {
             resetViewHolderForNewData()
-            showQuestion(entry)
-            if (entry.answer != null) {
-                showAnswer(entry.answer)
+            showQuestion(response)
+            if (response.answer != null) {
+                showAnswer(response.answer)
             } else if (!shouldHideButtons) {
-                showAnswerConfiguration(entry)
+                showAnswerConfiguration(response)
             }
         }
 
-        private fun showQuestion(entry: BidTableEntry) {
-            val question = context.resources.getString(R.string.question_header, entry.question)
-            binding.courierNameFormatted = entry.courierName
+        private fun showQuestion(response: CourierResponse) {
+            val question = context.resources.getString(R.string.question_header, response.question)
+            binding.courierNameFormatted = response.courierName
             binding.questionFormatted = question
         }
 
@@ -134,10 +142,10 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
             binding.answerSavedText.visibility = View.VISIBLE
         }
 
-        private fun showAnswerConfiguration(entry: BidTableEntry) {
+        private fun showAnswerConfiguration(response: CourierResponse) {
             showAnswerButton()
             setUpAnswerButtonClickListener()
-            setUpSaveButtonClickListener(entry)
+            setUpSaveButtonClickListener(response)
         }
 
         private fun showAnswerButton() {
@@ -152,11 +160,11 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
             }
         }
 
-        private fun setUpSaveButtonClickListener(entry: BidTableEntry) {
+        private fun setUpSaveButtonClickListener(response: CourierResponse) {
             binding.saveButton.setOnClickListener {
-                val answer = binding.answerEditText.text.toString()
+                val answer = binding.answerEditText.text.toString().trim()
                 if (answer != "") {
-                    saveAnswerToDatabase(answer, entry)
+                    saveAnswerToDatabase(answer, response)
                     hideAnsweringTools()
                     showAnswer(answer)
                 }
@@ -168,9 +176,9 @@ class BidTableEntryListAdapter(val context: Context, val shouldHideButtons: Bool
             binding.saveButton.visibility = View.GONE
         }
 
-        private fun saveAnswerToDatabase(answer: String, entry: BidTableEntry) {
-            answeredEntry.value = entry
-            newAnswer.value = answer
+        private fun saveAnswerToDatabase(answer: String, response: CourierResponse) {
+            _answeredQuestion.value = response
+            _newAnswer.value = answer
         }
     }
 }

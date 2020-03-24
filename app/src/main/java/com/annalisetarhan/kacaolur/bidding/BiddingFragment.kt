@@ -1,6 +1,5 @@
 package com.annalisetarhan.kacaolur.bidding
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +11,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.annalisetarhan.kacaolur.Application
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.BiddingFragmentBinding
-import kotlinx.android.synthetic.main.bidding_fragment.*
+import javax.inject.Inject
 
 class BiddingFragment : Fragment() {
 
-    private lateinit var binding: BiddingFragmentBinding
-    private lateinit var viewModel: BiddingViewModel
-    private lateinit var adapter: CourierResponseListAdapter
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var viewModel: BiddingViewModel
+    private lateinit var binding: BiddingFragmentBinding
+    private lateinit var adapter: CourierResponseListAdapter
 
     private lateinit var itemName: String
     private var itemDescription: String? = null
@@ -31,32 +32,16 @@ class BiddingFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.bidding_fragment, container, false)
-        viewModel = ViewModelProvider(this).get(BiddingViewModel::class.java)
+        Application.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BiddingViewModel::class.java)
 
         watchForChangesInResponseTable()
-
-        return binding.root
-    }
-
-    private fun watchForChangesInResponseTable() {
-        viewModel.allEntries.observe(this, Observer { entries ->
-            entries?.let { adapter.setEntries(it) }
-            if (responseListIsEmpty &&  entries.isNotEmpty()) {                 // Part of trying to set up "wait for bids" screen
-                responseListIsEmpty = false                                     // Can't say for sure if this will work with real data
-                hideWaitForBidsMessage()
-            }
-        })
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
 
         getItemInfo()
         displayItemInfo()
         setUpRecyclerView()
 
-        if (sharedPrefs.getBoolean("has_accepted_bid", false)) {
+        if (viewModel.hasAcceptedBid()) {
             showViewOrderButton()
         } else {
             setLiveDataObservers()
@@ -65,11 +50,23 @@ class BiddingFragment : Fragment() {
         if (responseListIsEmpty) {
             showWaitForBidsMessage()
         }
+
+        return binding.root
+    }
+
+    private fun watchForChangesInResponseTable() {
+        viewModel.allEntries.observe(viewLifecycleOwner, Observer { entries ->
+            entries?.let { adapter.setEntries(it) }
+            if (responseListIsEmpty &&  entries.isNotEmpty()) {                 // Part of trying to set up "wait for bids" screen
+                responseListIsEmpty = false                                     // Can't say for sure if this will work with real data
+                hideWaitForBidsMessage()
+            }
+        })
     }
 
     private fun getItemInfo() {
-        itemName = sharedPrefs.getString("item_name", "")!!
-        itemDescription = sharedPrefs.getString("item_description", "")
+        itemName = viewModel.getItemName()
+        itemDescription = viewModel.getItemDescription()
     }
 
     private fun displayItemInfo() {
@@ -85,10 +82,9 @@ class BiddingFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val hasAcceptedBid = sharedPrefs.getBoolean("has_accepted_bid", false)
-        adapter = CourierResponseListAdapter(context!!, hasAcceptedBid)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = CourierResponseListAdapter(requireContext(), viewModel.hasAcceptedBid())
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     private fun setLiveDataObservers() {
@@ -97,13 +93,13 @@ class BiddingFragment : Fragment() {
     }
 
     private fun watchForNewAnswers() {
-        adapter.newAnswer.observe(this, Observer { answer ->
+        adapter.newAnswer.observe(viewLifecycleOwner, Observer { answer ->
             viewModel.addAnswer(answer, adapter.answeredQuestion.value!!.splitSecondsSinceOrderPlaced)
         })
     }
 
     private fun watchForAcceptedBid() {
-        adapter.acceptedBid.observe(this, Observer { acceptedBid ->
+        adapter.acceptedBid.observe(viewLifecycleOwner, Observer { acceptedBid ->
             viewModel.saveAcceptedBid(acceptedBid)
             if (this.findNavController().currentDestination?.id == R.id.biddingFragment) {
                 findNavController().navigate(R.id.action_biddingFragment_to_waitingFragment)

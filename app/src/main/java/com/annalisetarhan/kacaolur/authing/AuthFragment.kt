@@ -12,41 +12,49 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.annalisetarhan.kacaolur.Application
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.AuthFragmentBinding
-import kotlinx.android.synthetic.main.auth_fragment.*
+import javax.inject.Inject
+
+/*
+ *  I'm really conflicted about the strategy here. It seems like far too much for a single fragment, but breaking
+ *  it up into six different ones seems redundant and wasteful.
+ */
 
 class AuthFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: AuthViewModel
     private lateinit var binding: AuthFragmentBinding
 
+    private var currentStage = 1
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.auth_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(AuthViewModel::class.java)
-
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        Application.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
 
         setUpPhoneEditTexts()
         setUpButtons()
 
         val currentStage = viewModel.selectStage()
         goTo(currentStage)
+
+        return binding.root
     }
 
     /*
      *      GO TO STAGE X
      */
 
-    private fun goTo(currentStage: Int) {
-        when (currentStage) {
+    private fun goTo(stage: Int) {
+        when (stage) {
             1 -> goToStage1()
             2 -> goToStage2()
             3 -> goToStage3()
@@ -57,119 +65,125 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage1() {
+        currentStage = 1
         hideEverything()
 
         showPhoneNumber()
         enablePhoneEditTexts()
 
-        primary_text_block.visibility = View.VISIBLE
-        primary_text_block.setText(R.string.enter_phone_number)
+        binding.primaryTextBlock.visibility = View.VISIBLE
+        binding.primaryTextBlock.setText(R.string.enter_phone_number)
 
-        stage1_center_button.visibility = View.VISIBLE
+        binding.stage1CenterButton.visibility = View.VISIBLE
     }
 
     private fun goToStage2() {
+        currentStage = 2
         hideEverything()
-
         showPhoneNumber()
         disablePhoneEditTexts()
 
-        primary_text_block.visibility = View.VISIBLE
-        secondary_text_block.visibility = View.VISIBLE
-        primary_text_block.setText(R.string.enter_phone_number)
-        secondary_text_block.setText(R.string.may_we_send_sms)
+        binding.primaryTextBlock.visibility = View.VISIBLE
+        binding.secondaryTextBlock.visibility = View.VISIBLE
+        binding.primaryTextBlock.setText(R.string.enter_phone_number)
+        binding.secondaryTextBlock.setText(R.string.may_we_send_sms)
 
-        stage2_left_button.visibility = View.VISIBLE
-        stage2_right_button.visibility = View.VISIBLE
+        binding.stage2LeftButton.visibility = View.VISIBLE
+        binding.stage2RightButton.visibility = View.VISIBLE
     }
 
     private fun goToStage3() {
+        currentStage = 3
         hideEverything()
 
-        secondary_text_block.visibility = View.VISIBLE
-        secondary_text_block.setText(R.string.code_is_coming)
+        binding.secondaryTextBlock.visibility = View.VISIBLE
+        binding.secondaryTextBlock.setText(R.string.code_is_coming)
+        binding.verificationCodeEdittext.visibility = View.VISIBLE
 
-        verification_code_edittext.visibility = View.VISIBLE
-
-        stage3_left_button.visibility = View.VISIBLE
-        stage3_right_button.visibility = View.VISIBLE
+        binding.stage3LeftButton.visibility = View.VISIBLE
+        binding.stage3RightButton.visibility = View.VISIBLE
     }
 
     private fun goToStage4() {
+        currentStage = 4
         hideEverything()
 
-        primary_text_block.visibility = View.VISIBLE
-        primary_text_block.setText(R.string.choose_display_name)
+        binding.secondaryTextBlock.visibility = View.VISIBLE
+        binding.secondaryTextBlock.setText(R.string.choose_display_name)
+        binding.usernameEdittext.visibility = View.VISIBLE
+        binding.verificationCodeEdittext.visibility = View.INVISIBLE      // This is to keep the secondary_block in the right place
 
-        username_edittext.visibility = View.VISIBLE
-
-        stage4_center_button.visibility = View.VISIBLE
+        binding.stage4CenterButton.visibility = View.VISIBLE
     }
 
     private fun goToStage5() {
+        currentStage = 5
         hideEverything()
 
-        primary_text_block.visibility = View.VISIBLE
-        primary_text_block.text = getString(R.string.nice_to_meet_you, viewModel.username)
+        binding.secondaryTextBlock.visibility = View.VISIBLE
+        binding.secondaryTextBlock.text = getString(R.string.nice_to_meet_you, viewModel.username)
 
-        stage56_center_button.visibility = View.VISIBLE
+        binding.stage56CenterButton.visibility = View.VISIBLE
+        viewModel.userIsLoggedIn()
     }
 
     private fun goToStage6() {
+        currentStage = 6
         hideEverything()
 
-        primary_text_block.visibility = View.VISIBLE
-        primary_text_block.text = getString(R.string.welcome_back, viewModel.username)
+        binding.secondaryTextBlock.visibility = View.VISIBLE
+        binding.secondaryTextBlock.text = getString(R.string.welcome_back, viewModel.username)
 
-        stage56_center_button.visibility = View.VISIBLE
+        binding.stage56CenterButton.visibility = View.VISIBLE
+        viewModel.userIsLoggedIn()
     }
 
     private fun hideEverything() {
-        phone_textview_1.visibility = View.GONE
-        phone_textview_2.visibility = View.GONE
-        phone_textview_3.visibility = View.GONE
-        phone_edittext_1.visibility = View.GONE
-        phone_edittext_2.visibility = View.GONE
-        phone_edittext_3.visibility = View.GONE
+        binding.phoneTextview1.visibility = View.GONE
+        binding.phoneTextview2.visibility = View.GONE
+        binding.phoneTextview3.visibility = View.GONE
+        binding.phoneEdittext1.visibility = View.GONE
+        binding.phoneEdittext2.visibility = View.GONE
+        binding.phoneEdittext3.visibility = View.GONE
 
-        primary_text_block.visibility = View.GONE
-        secondary_text_block.visibility = View.GONE
+        binding.primaryTextBlock.visibility = View.GONE
+        binding.secondaryTextBlock.visibility = View.GONE
 
-        username_edittext.visibility = View.GONE
-        verification_code_edittext.visibility = View.GONE
+        binding.usernameEdittext.visibility = View.GONE
+        binding.verificationCodeEdittext.visibility = View.GONE
 
-        stage1_center_button.visibility = View.GONE
-        stage2_left_button.visibility = View.GONE
-        stage2_right_button.visibility = View.GONE
-        stage3_left_button.visibility = View.GONE
-        stage3_right_button.visibility = View.GONE
-        stage4_center_button.visibility = View.GONE
-        stage56_center_button.visibility = View.GONE
+        binding.stage1CenterButton.visibility = View.GONE
+        binding.stage2LeftButton.visibility = View.GONE
+        binding.stage2RightButton.visibility = View.GONE
+        binding.stage3LeftButton.visibility = View.GONE
+        binding.stage3RightButton.visibility = View.GONE
+        binding.stage4CenterButton.visibility = View.GONE
+        binding.stage56CenterButton.visibility = View.GONE
     }
 
     private fun showPhoneNumber() {
-        phone_textview_1.visibility = View.VISIBLE
-        phone_textview_2.visibility = View.VISIBLE
-        phone_textview_3.visibility = View.VISIBLE
-        phone_edittext_1.visibility = View.VISIBLE
-        phone_edittext_2.visibility = View.VISIBLE
-        phone_edittext_3.visibility = View.VISIBLE
+        binding.phoneTextview1.visibility = View.VISIBLE
+        binding.phoneTextview2.visibility = View.VISIBLE
+        binding.phoneTextview3.visibility = View.VISIBLE
+        binding.phoneEdittext1.visibility = View.VISIBLE
+        binding.phoneEdittext2.visibility = View.VISIBLE
+        binding.phoneEdittext3.visibility = View.VISIBLE
     }
 
 
     private fun enablePhoneEditTexts() {
-        phone_edittext_1.isEnabled = true
-        phone_edittext_2.isEnabled = true
-        phone_edittext_3.isEnabled = true
+        binding.phoneEdittext1.isEnabled = true
+        binding.phoneEdittext2.isEnabled = true
+        binding.phoneEdittext3.isEnabled = true
     }
 
     private fun disablePhoneEditTexts() {
-        phone_edittext_1.isEnabled = false
-        phone_edittext_2.isEnabled = false
-        phone_edittext_3.isEnabled = false
-        phone_edittext_1.setTextColor(ContextCompat.getColor(context!!, R.color.primaryTextColor))        // Risky? How do I know the context won't be null? Because it has to be attached to an activity for a user to click the button?
-        phone_edittext_2.setTextColor(ContextCompat.getColor(context!!, R.color.primaryTextColor))
-        phone_edittext_3.setTextColor(ContextCompat.getColor(context!!, R.color.primaryTextColor))
+        binding.phoneEdittext1.isEnabled = false
+        binding.phoneEdittext2.isEnabled = false
+        binding.phoneEdittext3.isEnabled = false
+        binding.phoneEdittext1.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryTextColor))        // Risky? How do I know the context won't be null? Because it has to be attached to an activity for a user to click the button?
+        binding.phoneEdittext2.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryTextColor))
+        binding.phoneEdittext3.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryTextColor))
     }
 
     /*
@@ -182,12 +196,12 @@ class AuthFragment : Fragment() {
     private var prevEditText2CursorPosition: Int? = null
 
     private fun setUpPhoneEditTexts() {
-        phone_edittext_1.addTextChangedListener(object : TextWatcher {
+        binding.phoneEdittext1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (userIsNotMakingChanges) {
                     return
                 }
-                if (phone_edittext_1.text.length == 3) {
+                if (binding.phoneEdittext1.text.length == 3) {
                     val lastDigit = chopOffLastDigit(1)
                     pushDigitToNextEditText(lastDigit, 2)
                     moveCursorIfNecessary(1)
@@ -203,21 +217,21 @@ class AuthFragment : Fragment() {
                 if (after < count && !userIsNotMakingChanges) {
                     digitDeletedFlag = true
                 }
-                prevEditText1CursorPosition = phone_edittext_1.selectionStart
+                prevEditText1CursorPosition = binding.phoneEdittext1.selectionStart
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        phone_edittext_2.addTextChangedListener(object : TextWatcher {
+        binding.phoneEdittext2.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (userIsNotMakingChanges) {
                     return
                 }
-                if (phone_edittext_2.selectionEnd == 0) {
+                if (binding.phoneEdittext2.selectionEnd == 0) {
                     moveCursorBackTo(1)
                 }
-                if (phone_edittext_2.text.length == 4) {
+                if (binding.phoneEdittext2.text.length == 4) {
                     val lastDigit = chopOffLastDigit(2)
                     pushDigitToNextEditText(lastDigit, 3)
                     moveCursorIfNecessary(2)
@@ -233,21 +247,21 @@ class AuthFragment : Fragment() {
                 if (after < count && !userIsNotMakingChanges) {
                     digitDeletedFlag = true
                 }
-                prevEditText2CursorPosition = phone_edittext_2.selectionStart
+                prevEditText2CursorPosition = binding.phoneEdittext2.selectionStart
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        phone_edittext_3.addTextChangedListener(object : TextWatcher {
+        binding.phoneEdittext3.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (userIsNotMakingChanges) {
                     return
                 }
-                if (phone_edittext_3.selectionEnd == 0) {
+                if (binding.phoneEdittext3.selectionEnd == 0) {
                     moveCursorBackTo(2)
                 }
-                if (phone_edittext_3.text.length == 5) {
+                if (binding.phoneEdittext3.text.length == 5) {
                     chopOffLastDigit(3)
                 }
             }
@@ -295,11 +309,11 @@ class AuthFragment : Fragment() {
 
     private fun moveCursorIfNecessary(editTextNum: Int) {
         if (editTextNum == 1 && prevEditText1CursorPosition!! > 1) {
-            phone_edittext_2.requestFocus()
-            phone_edittext_2.setSelection(prevEditText1CursorPosition!! - 2)
+            binding.phoneEdittext2.requestFocus()
+            binding.phoneEdittext2.setSelection(prevEditText1CursorPosition!! - 2)
         } else if (editTextNum == 2 && prevEditText2CursorPosition!! > 2) {
-            phone_edittext_3.requestFocus()
-            phone_edittext_3.setSelection(prevEditText2CursorPosition!! - 3)
+            binding.phoneEdittext3.requestFocus()
+            binding.phoneEdittext3.setSelection(prevEditText2CursorPosition!! - 3)
         }
     }
 
@@ -330,9 +344,9 @@ class AuthFragment : Fragment() {
 
     private fun getEditText(editTextNum: Int): EditText {
         return when (editTextNum) {
-            1 -> phone_edittext_1
-            2 -> phone_edittext_2
-            3 -> phone_edittext_3
+            1 -> binding.phoneEdittext1
+            2 -> binding.phoneEdittext2
+            3 -> binding.phoneEdittext3
             else -> error("invalid editTextNum")
         }
     }
@@ -357,8 +371,8 @@ class AuthFragment : Fragment() {
 
     private fun getNextEditText(editTextNum: Int): EditText? {
         return when (editTextNum) {
-            1 -> phone_edittext_2
-            2 -> phone_edittext_3
+            1 -> binding.phoneEdittext2
+            2 -> binding.phoneEdittext3
             3 -> null
             else -> error("invalid editTextNum")
         }
@@ -381,9 +395,12 @@ class AuthFragment : Fragment() {
     private fun setUpStage1CenterButton() {
         binding.stage1CenterButton.setOnClickListener {
             val phoneNumber =
-                "5" + phone_edittext_1.text.toString() + phone_edittext_2.text.toString() + phone_edittext_3.text.toString()
-            if (phoneNumber == "500") {         // FOR TEXTING ONLY
+                "5" + binding.phoneEdittext1.text.toString() + binding.phoneEdittext2.text.toString() + binding.phoneEdittext3.text.toString()
+            if (phoneNumber == "500") {         // FOR TESTING ONLY
                 viewModel.nukeData()
+                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
+                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
+                }
             }
             if (phoneNumberIsValid()) {
                 viewModel.savePhoneNumber(phoneNumber)
@@ -395,7 +412,7 @@ class AuthFragment : Fragment() {
     }
 
     private fun phoneNumberIsValid(): Boolean {
-        return phone_edittext_1.text.length == 2 && phone_edittext_2.text.length == 3 && phone_edittext_3.text.length == 4
+        return binding.phoneEdittext1.text.length == 2 && binding.phoneEdittext2.text.length == 3 && binding.phoneEdittext3.text.length == 4
     }
 
     private fun insistOnPhoneNumber() {
@@ -424,7 +441,8 @@ class AuthFragment : Fragment() {
 
     private fun setUpStage3RightButton() {
         binding.stage3RightButton.setOnClickListener {
-            if (viewModel.codeIsValid(verification_code_edittext.text.toString())) {
+            if (viewModel.codeIsValid(binding.verificationCodeEdittext.text.toString())) {
+                viewModel.validatePhoneNumber()
                 goTo(viewModel.selectStage())
             } else {
                 insistOnCode()
@@ -440,16 +458,23 @@ class AuthFragment : Fragment() {
 
     private fun setUpStage4CenterButton() {
         binding.stage4CenterButton.setOnClickListener {
-            if (username_edittext.text.toString() == "0000") {      // FOR TESTING ONLY
+            val username = binding.usernameEdittext.text.toString().trim()
+            // Testing-only code starts here
+            if (username == "0000") {
                 viewModel.nukeData()
-                goToStage1()
+                binding.usernameEdittext.text.clear()
+                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
+                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
+                }
             } else {
+                // Testing-only code ends here
                 when {
-                    username_edittext.text.length < 4 -> insistOnLongerUsername()
-                    !viewModel.nameIsAvailable(username_edittext.text.toString()) -> insistOnAvailableUsername(
-                        username_edittext.text.toString()
-                    )
-                    else -> goToStage5()
+                    username.length < 4 -> insistOnLongerUsername()
+                    !viewModel.nameIsAvailable(username) -> insistOnAvailableUsername(username)
+                    else -> {
+                        viewModel.saveUsername(username)
+                        goToStage5()
+                    }
                 }
             }
         }

@@ -3,48 +3,56 @@ package com.annalisetarhan.kacaolur.confirming
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.provider.Settings.Global.getString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.annalisetarhan.kacaolur.R
-import com.annalisetarhan.kacaolur.Time
-import com.annalisetarhan.kacaolur.waiting.CourierMessage
+import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
+import com.annalisetarhan.kacaolur.utils.Time
 import com.annalisetarhan.kacaolur.waiting.CourierMessageRepository
-import com.annalisetarhan.kacaolur.waiting.CourierMessageRoomDatabase
+import com.annalisetarhan.kacaolur.utils.DateTime
+import com.annalisetarhan.kacaolur.waiting.CourierMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ConfirmingViewModel(application: Application) : AndroidViewModel(application) {
-
+class ConfirmingViewModel @Inject constructor(
+    private val sharedPrefs: SharedPreferencesStorage,
     private val repository: CourierMessageRepository
-    var sharedPrefs: SharedPreferences
-
-    init {
-        val messagesDao = CourierMessageRoomDatabase.getDatabase(application, viewModelScope).courierMessageDao()
-        repository = CourierMessageRepository(messagesDao)
-        sharedPrefs = application.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-    }
+) : ViewModel() {
 
     fun itemRejected(context: Context, complaint: String) {
         updateSharedPrefs(context)
         addComplaintToMessageThread(context, complaint)
-        // TODO: tell server about complaint
     }
 
     private fun updateSharedPrefs(context: Context) {
         val secondsPaused = Time().getSecondsPaused(context)
 
-        val editor = sharedPrefs.edit()
-        editor.putInt("time_paused_in_seconds", secondsPaused)
-        editor.putString("last_time_paused", "")
-        editor.putBoolean("waiting_for_item_inspection", false)
-        editor.apply()
+        sharedPrefs.setInt("time_paused_in_seconds", secondsPaused)
+        sharedPrefs.setString("last_time_paused", "")
+        sharedPrefs.setBoolean("waiting_for_item_inspection", false)
     }
 
     private fun addComplaintToMessageThread(context: Context, complaint: String) = viewModelScope.launch(Dispatchers.IO) {
-        val timeStamp = Time().getTimestampString(context)
+        val currentDateTime = DateTime()
+        val bidAcceptedDateTime = DateTime(sharedPrefs.getString("bid_accepted_datetime")!!)
+        val timeStamp = currentDateTime.getTimestampString(context)
         val complaintFormatted = context.resources.getString(R.string.reason_for_rejection, complaint)
-        val courierMessage = CourierMessage(0, false, timeStamp, complaintFormatted)
-        repository.sendMessage(courierMessage)
+        repository.sendMessage(
+            CourierMessage(
+                currentDateTime.getSplitSecondsSince(bidAcceptedDateTime),
+                currentDateTime.getString(),
+                timeStamp,
+                false,
+                complaintFormatted)
+        )
+        // TODO: tell repository to tell server that item was rejected
+    }
+
+    fun getFormattedItemPrice(context: Context): String {
+        val itemPrice = sharedPrefs.getFloat("item_price")
+        return context.getString(R.string.item_price_fiyat, itemPrice)
     }
 }

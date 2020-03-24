@@ -1,8 +1,10 @@
-package com.annalisetarhan.kacaolur
+package com.annalisetarhan.kacaolur.utils
 
 import android.content.Context
+import com.annalisetarhan.kacaolur.R
 import org.threeten.bp.LocalTime
 
+const val SECONDS_IN_A_DAY = 86400
 
 class Time {
     private var time: LocalTime
@@ -33,23 +35,24 @@ class Time {
         time = LocalTime.of(hours, minutes, seconds)
     }
 
+
     private fun setHMS() {
         hours = time.hour
         minutes = time.minute
         seconds = time.second
     }
 
-    fun getStringForCountdown(context: Context): String {
+    fun getCountdownString(context: Context): String {
         return if (hours == 0) {
             val minString = twoDigitString(minutes, context)
             val secString = twoDigitString(seconds, context)
             context.resources.getString(R.string.mm_ss, minString, secString)
         } else {
-            getStringForSharedPrefs(context)
+            getSharedPrefsString(context)
         }
     }
 
-    fun getStringForSharedPrefs(context: Context): String {
+    fun getSharedPrefsString(context: Context): String {
         val minString = twoDigitString(minutes, context)
         val secString = twoDigitString(seconds, context)
         val hourString = twoDigitString(hours, context)
@@ -63,7 +66,7 @@ class Time {
     }
 
     fun getTimeInMinutes(): String {
-        val totalMinutes = 60*hours + minutes
+        val totalMinutes = 60 * hours + minutes
         return totalMinutes.toString()
     }
 
@@ -75,8 +78,8 @@ class Time {
         }
     }
 
-    fun getSeconds(): Int {
-        return (hours*3600) + (minutes*60) + seconds
+    private fun getSeconds(): Int {
+        return (hours * 3600) + (minutes * 60) + seconds
     }
 
     fun secondsSince(pastTime: Time): Int {
@@ -84,9 +87,8 @@ class Time {
         var thisTimeSeconds = getSeconds()
 
         if (thisTimeSeconds < pastTimeSeconds) {
-            thisTimeSeconds += 86400
+            thisTimeSeconds += SECONDS_IN_A_DAY
         }
-
         return thisTimeSeconds - pastTimeSeconds
     }
 

@@ -1,53 +1,59 @@
 package com.annalisetarhan.kacaolur.waiting
 
-import android.app.Application
 import android.content.Context
 import android.os.CountDownTimer
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.annalisetarhan.kacaolur.R
-import com.annalisetarhan.kacaolur.Time
+import androidx.lifecycle.*
+import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
+import com.annalisetarhan.kacaolur.utils.Time
+import com.annalisetarhan.kacaolur.utils.DateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class WaitingViewModel(application: Application): AndroidViewModel(application) {
-    private val repository: CourierMessageRepository
-    val allMessages: LiveData<List<CourierMessage>>
-    val timeRemaining = MutableLiveData<String>()
+class WaitingViewModel @Inject constructor(
+    private val repository: CourierMessageRepository,
+    private val sharedPrefs: SharedPreferencesStorage
+) : ViewModel() {
+
+    val allMessages: LiveData<List<CourierMessage>> = repository.allMessages
+    val timeRemaining: LiveData<String>
+        get() = _timeRemaining
+
+    private val _timeRemaining = MutableLiveData<String>()
 
     init {
-        val messagesDao = CourierMessageRoomDatabase.getDatabase(application, viewModelScope).courierMessageDao()
-        repository = CourierMessageRepository(messagesDao)
-        allMessages = repository.allMessages
-        timeRemaining.value = "00:00"
+        _timeRemaining.value = "00:00"
     }
 
     fun sendMessage(message: String) = viewModelScope.launch(Dispatchers.IO) {
-        val timeStamp = Time().getTimestampString(getApplication())
-        val courierMessage = CourierMessage(0, false, timeStamp, message)
-        repository.sendMessage(courierMessage)
+        val currentDateTime = DateTime()
+        val bidAcceptedDateTime = DateTime(sharedPrefs.getString("bid_accepted_datetime")!!)
+        repository.sendMessage(
+            CourierMessage(
+                currentDateTime.getSplitSecondsSince(bidAcceptedDateTime),
+                currentDateTime.getString(),
+                currentDateTime.getTimestampString(com.annalisetarhan.kacaolur.Application.context),
+                false,
+                message
+            )
+        )
     }
 
     fun setUpCountdownTimer(context: Context) {
-        val secondsRemaining = calculateCountdownTime(context)
-        timeRemaining.value = Time(secondsRemaining).getStringForCountdown(context)
+        val secondsRemaining = calculateCountdownTime()
+        _timeRemaining.value = Time(secondsRemaining).getCountdownString(context)
         startCountdown(secondsRemaining, context)
     }
 
-    private fun calculateCountdownTime(context: Context): Int {
-        val sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
+    private fun calculateCountdownTime(): Int {
+        val timePromisedInSeconds = sharedPrefs.getInt("delivery_time_in_seconds")
+        val timePausedInSeconds = sharedPrefs.getInt("time_paused_in_seconds")
 
-        val timePromisedInSeconds = sharedPrefs.getInt("delivery_time_in_seconds", 0)
-        val timePausedInSeconds = sharedPrefs.getInt("time_paused_in_seconds", 0)
+        val dateTimeBidAccepted = DateTime(sharedPrefs.getString("bid_accepted_datetime")!!)
+        val secondsSinceBidAccepted = dateTimeBidAccepted.secondsAgo()
 
-        val currentTime = Time()
-        val timeBidAccepted = Time(sharedPrefs.getString("time_bid_accepted_string", "")!!)
-        val timeElapsedSinceBidAccepted = currentTime.secondsSince(timeBidAccepted)
-
-        val timeRemaining = timePromisedInSeconds + timePausedInSeconds - timeElapsedSinceBidAccepted
+        val timeRemaining = timePromisedInSeconds + timePausedInSeconds - secondsSinceBidAccepted
         return if (timeRemaining < 1) {
             0
         } else {
@@ -56,27 +62,40 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
     }
 
     private fun startCountdown(seconds: Int, context: Context) {
-        object : CountDownTimer(seconds*1000.toLong(), 1000) {
+        object : CountDownTimer(seconds * 1000.toLong(), 1000) {
 
             override fun onTick(p0: Long) {
-                val secondsRemaining = Time((p0/1000).toInt())
-                timeRemaining.value = secondsRemaining.getStringForCountdown(context)
+                val secondsRemaining = Time((p0 / 1000).toInt())
+                _timeRemaining.value = secondsRemaining.getCountdownString(context)
             }
 
             override fun onFinish() {
-                timeRemaining.value = "00:00"
+                _timeRemaining.value = "00:00"
             }
         }.start()
 
         if (seconds == 0) {
-            timeRemaining.value = "00:00"
+            _timeRemaining.value = "00:00"
         }
     }
 
     fun pauseTimer(context: Context) {
-        val sharedPrefs = context.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        val editor = sharedPrefs.edit()
-        editor.putBoolean("waiting_for_item_inspection", true)
-        editor.putString("last_time_paused", Time().getStringForSharedPrefs(context))
-        editor.apply()}
+        sharedPrefs.setBoolean("waiting_for_item_inspection", true)
+        sharedPrefs.setString("last_time_paused", Time().getSharedPrefsString(context))
+    }
+
+    fun getCourierName() = sharedPrefs.getString("courier_name")
+    fun getDeliveryPrice() = sharedPrefs.getFloat("delivery_price")
+
+    fun getDeliveryTime(): String {
+        val timeInSeconds = sharedPrefs.getInt("delivery_time_in_seconds")
+        return Time(timeInSeconds).getTimeInMinutes()
+    }
+
+    fun isWaitingForItemInspection() =
+        sharedPrefs.getBoolean("waiting_for_item_inspection")
+
+    fun nukeData() {
+        sharedPrefs.nuke()
+    }
 }

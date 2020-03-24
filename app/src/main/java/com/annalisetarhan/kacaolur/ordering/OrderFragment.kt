@@ -20,14 +20,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.annalisetarhan.kacaolur.Application
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.OrderFragmentBinding
-import kotlinx.android.synthetic.main.order_fragment.*
 import java.io.File
 import java.io.IOException
+import javax.inject.Inject
 
 class OrderFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: OrderViewModel
     private lateinit var binding: OrderFragmentBinding
 
@@ -41,21 +44,18 @@ class OrderFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.order_fragment, container, false)
-        viewModel = ViewModelProvider(this).get(OrderViewModel::class.java)
-
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        Application.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(OrderViewModel::class.java)
 
         if (viewModel.orderSubmitted) {
             sterilizeFragment()
         } else {
             setUpNormalFragment()
         }
-    }
 
+        return binding.root
+    }
+    
     private fun sterilizeFragment() {
         setItemName()
         setItemDescription()
@@ -93,13 +93,15 @@ class OrderFragment : Fragment() {
     private fun addPicture() {
         if (viewModel.hasPicture) {
             val photoUri = viewModel.getPhotoUri()
-            imageView.setImageURI(photoUri)
+            binding.imageView.setImageURI(photoUri)
         }
     }
 
     /*
      *      ATTACH PICTURE BUTTON
      */
+
+    // TODO: App crashes if permission is denied
 
     private fun setUpAttachPictureButton() {
         binding.attachPictureButton.setOnClickListener {
@@ -116,9 +118,9 @@ class OrderFragment : Fragment() {
     }
 
     private fun checkPermissions(): Boolean {
-        return (ContextCompat.checkSelfPermission(context!!, CAMERA)
+        return (ContextCompat.checkSelfPermission(requireContext(), CAMERA)
                 == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context!!, READ_EXTERNAL_STORAGE)
+                && ContextCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED)
     }
 
@@ -143,7 +145,7 @@ class OrderFragment : Fragment() {
 
     private fun takePicture() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
                 val photoFile = try {
                     createImageFile()
                 } catch (e: IOException) {
@@ -152,7 +154,7 @@ class OrderFragment : Fragment() {
                 }
                 photoFile?.also {
                     photoUri = FileProvider.getUriForFile(
-                        context!!, "com.annalisetarhan.kacaolur.fileprovider", it
+                        requireContext(), "com.annalisetarhan.kacaolur.fileprovider", it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
@@ -173,7 +175,7 @@ class OrderFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            imageView.setImageURI(photoUri)
+            binding.imageView.setImageURI(photoUri)
             binding.attachPictureButton.text = getString(R.string.retake_picture)
             viewModel.savePhoto(photoUri)
         }
@@ -186,8 +188,8 @@ class OrderFragment : Fragment() {
 
     private fun setUpKacaButton() {
         binding.kacaButton.setOnClickListener {
-            val itemName = item_name_edit_text.text.toString().trim()
-            val itemDescription = item_description_edit_text.text.toString().trim()
+            val itemName = binding.itemNameEditText.text.toString().trim()
+            val itemDescription = binding.itemDescriptionEditText.text.toString().trim()
             val order = Order(itemName, itemDescription)
 
             if (itemName == "") {

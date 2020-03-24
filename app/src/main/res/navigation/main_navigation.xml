@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main_navigation"
-        app:startDestination="@id/authFragment">
+        app:startDestination="@id/welcomeFragment">
 
     <fragment
             android:id="@+id/orderFragment"
@@ -17,6 +17,7 @@
         <action
                 android:id="@+id/action_orderFragment_to_waitingFragment"
                 app:destination="@id/waitingFragment"/>
+        <action android:id="@+id/action_orderFragment_to_welcomeFragment" app:destination="@id/welcomeFragment"/>
     </fragment>
 
     <fragment
@@ -35,6 +36,7 @@
         <action
                 android:id="@+id/action_waitingFragment_to_confirmingFragment"
                 app:destination="@id/confirmingFragment"/>
+        <action android:id="@+id/action_waitingFragment_to_authFragment" app:destination="@id/authFragment"/>
     </fragment>
 
     <fragment
@@ -66,6 +68,13 @@
             tools:layout="@layout/settings_fragment"/>
     <fragment android:id="@+id/authFragment" android:name="com.annalisetarhan.kacaolur.authing.AuthFragment"
               android:label="AuthFragment">
-        <action android:id="@+id/action_authFragment_to_orderFragment" app:destination="@id/orderFragment"/>
+        <action android:id="@+id/action_authFragment_to_orderFragment" app:destination="@id/orderFragment"
+                app:popUpTo="@+id/welcomeFragment"/>
+        <action android:id="@+id/action_authFragment_to_welcomeFragment" app:destination="@id/welcomeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/welcomeFragment" android:name="com.annalisetarhan.kacaolur.welcoming.WelcomeFragment"
+              android:label="WelcomeFragment">
+        <action android:id="@+id/action_welcomeFragment_to_authFragment" app:destination="@id/authFragment"/>
+        <action android:id="@+id/action_welcomeFragment_to_orderFragment" app:destination="@id/orderFragment"/>
     </fragment>
 </navigation>

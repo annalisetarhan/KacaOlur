@@ -6,31 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.annalisetarhan.kacaolur.Application
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.PaymentFragmentBinding
+import javax.inject.Inject
 
 class PaymentFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: PaymentViewModel
     private lateinit var binding: PaymentFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.payment_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(PaymentViewModel::class.java)
-
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        Application.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PaymentViewModel::class.java)
 
         viewModel.update()
 
         setPriceInfo()
         setUpButtons()
+
+        return binding.root
     }
 
     private fun setPriceInfo() {
@@ -46,7 +48,7 @@ class PaymentFragment : Fragment() {
             }
         }
         binding.payButton.setOnClickListener {
-            viewModel.pay(context!!)
+            viewModel.pay(requireContext())
             if (it.findNavController().currentDestination?.id == R.id.paymentFragment) {
                 findNavController().navigate(R.id.action_paymentFragment_to_waitingFragment)
             }

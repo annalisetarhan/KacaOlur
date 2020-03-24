@@ -1,6 +1,5 @@
 package com.annalisetarhan.kacaolur.confirming
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -9,42 +8,39 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.annalisetarhan.kacaolur.Application
 import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.databinding.ConfirmingFragmentBinding
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.confirming_fragment.*
+import javax.inject.Inject
 
 class ConfirmingFragment : Fragment() {
 
-    private lateinit var binding: ConfirmingFragmentBinding
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private lateinit var viewModel: ConfirmingViewModel
+    private lateinit var binding: ConfirmingFragmentBinding
 
     private val salcaUrl = "https://www.altunbilekler.com/Uploads/UrunResimleri/tat-domates-salca-720-gr-cam-d586.jpg"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.confirming_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(ConfirmingViewModel::class.java)
+        Application.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ConfirmingViewModel::class.java)
+
+        getItemPrice()
+        loadPicture()
+        setUpButtons()
 
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        getItemPrice()
-        loadPicture()
-
-        setUpButtons()
-    }
-
     private fun getItemPrice() {
-        val sharedPrefs = activity!!.getSharedPreferences(R.string.shared_prefs_filename.toString(), 0)
-        val itemPrice = sharedPrefs.getFloat("item_price", 5.50f)
-        val itemPriceFormatted = getString(R.string.item_price_fiyat, itemPrice)
-        binding.itemPriceFormatted = itemPriceFormatted
+        binding.itemPriceFormatted = context?.let { viewModel.getFormattedItemPrice(it) }
     }
 
     private fun loadPicture() {
@@ -52,7 +48,7 @@ class ConfirmingFragment : Fragment() {
         Picasso
             .get()
             .load(salcaUrl)
-            .into(imageView)
+            .into(binding.imageView)
     }
 
     private fun setUpButtons() {
@@ -94,12 +90,12 @@ class ConfirmingFragment : Fragment() {
 
     private fun setGonderButton() {
         binding.gonderButton.setOnClickListener {
-            val complaintString = complaintBox.text.toString()
+            val complaintString = binding.complaintBox.text.toString()
 
             if (complaintString == "") {
                 askForReason()
             } else {
-                viewModel.itemRejected(context!!, complaintString)
+                viewModel.itemRejected(requireContext(), complaintString)
                 // TODO: fill in server
                 if (it.findNavController().currentDestination?.id == R.id.confirmingFragment) {
                     findNavController().navigate(R.id.action_confirmingFragment_to_waitingFragment)

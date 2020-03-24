@@ -17,8 +17,6 @@ class CourierMessageAdapter(val context: Context) : RecyclerView.Adapter<Recycle
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var messages = emptyList<CourierMessage>()
 
-    val newMessage = MutableLiveData<CourierMessage>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             RECEIVED -> {
@@ -60,7 +58,7 @@ class CourierMessageAdapter(val context: Context) : RecyclerView.Adapter<Recycle
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: CourierMessage) {
-            binding.message = message.message
+            binding.message = message.text
             binding.timeStamp = message.timeStamp
         }
     }
@@ -69,7 +67,7 @@ class CourierMessageAdapter(val context: Context) : RecyclerView.Adapter<Recycle
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: CourierMessage) {
-            binding.message = message.message
+            binding.message = message.text
             binding.timeStamp = message.timeStamp
         }
     }

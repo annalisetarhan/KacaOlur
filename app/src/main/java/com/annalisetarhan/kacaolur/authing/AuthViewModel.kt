@@ -1,32 +1,30 @@
 package com.annalisetarhan.kacaolur.authing
 
-import android.app.Application
-import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
-import com.annalisetarhan.kacaolur.R
+import androidx.lifecycle.ViewModel
+import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
+import javax.inject.Inject
 
-class AuthViewModel(application: Application): AndroidViewModel(application) {
+class AuthViewModel @Inject constructor(
+    private val sharedPrefs: SharedPreferencesStorage
+) : ViewModel() {
 
-    private val sharedPrefs: SharedPreferences
-    var phoneNumber: String?
-    var userIsLoggedIn = false
-    var phoneNumberValidated = false
+    // TODO: User will get kicked to this page if their userId isn't in SharedPrefs, but there's nothing here to make sure we get it
+
+    private var phoneNumber: String?
+    private var userIsLoggedIn = false
+    private var phoneNumberValidated = false
     var username: String?
 
     init {
-        val context = getApplication<Application>().applicationContext
-        sharedPrefs = context.getSharedPreferences((R.string.shared_prefs_filename).toString(), 0)
-        phoneNumber = sharedPrefs.getString("phone_number", null)
-        phoneNumberValidated = sharedPrefs.getBoolean("phone_number_validated", false)
-        username = sharedPrefs.getString("username", null)
+        phoneNumber = sharedPrefs.getString("phone_number")
+        phoneNumberValidated = sharedPrefs.getBoolean("phone_number_validated")
+        username = sharedPrefs.getString("username")
         userIsLoggedIn = (phoneNumber != null && username != null)
     }
 
     fun savePhoneNumber(phoneNumber: String) {
         this.phoneNumber = phoneNumber
-        val editor = sharedPrefs.edit()
-        editor.putString("phone_number", phoneNumber)
-        editor.apply()
+        sharedPrefs.setString("phone_number", phoneNumber)
     }
 
     fun selectStage() : Int {
@@ -38,40 +36,40 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun codeIsValid(
-        code: String) : Boolean {
-        // Do fancy google stuff
+    fun codeIsValid(code: String) : Boolean {
+        // TODO: send code to firebase to validate
         validatePhoneNumber()
         getUserInfo()
         return true
     }
 
-    private fun validatePhoneNumber() {
+    fun validatePhoneNumber() {
         phoneNumberValidated = true
-        val editor = sharedPrefs.edit()
-        editor.putBoolean("phone_number_validated", true)
-        editor.apply()
+        sharedPrefs.setBoolean("phone_number_validated", true)
+        getUserInfo()
     }
 
     private fun getUserInfo() {
-        // Send server the phone number, see if we know about them
-        userIsLoggedIn = false
+        // TODO: Send server the phone number, see if we know about them (is this all I need to do to fix the userId issue?)
     }
 
-    fun nameIsAvailable(username: String) : Boolean {           // Is it bad practice to save username in a function whose purpose is to check availability?
-        // Send username to server, see if it's already in use
-        if (true) {
-            this.username = username
-            val editor = sharedPrefs.edit()
-            editor.putString("username", username)
-            editor.apply()
-            return true
-        } else {
-            return false
-        }
+    fun nameIsAvailable(username: String) : Boolean {
+        // TODO: Send username to server, see if it's already in use
+        return username != "Mehmet"
+    }
+
+    fun saveUsername(username: String) {
+        this.username = username
+        sharedPrefs.setString("username", username)
+    }
+
+    fun userIsLoggedIn() {
+        userIsLoggedIn = true
     }
 
     fun nukeData() {
-        sharedPrefs.edit().clear().apply()
+        sharedPrefs.nuke()
     }
+
+
 }
