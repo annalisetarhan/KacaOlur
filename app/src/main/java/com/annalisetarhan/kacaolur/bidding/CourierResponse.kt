@@ -1,5 +1,6 @@
 package com.annalisetarhan.kacaolur.bidding
 
+// TODO: sealed class?
 data class CourierResponse (
     val splitSecondsSinceOrderPlaced: Int,
     val dateTimeSubmitted: String,

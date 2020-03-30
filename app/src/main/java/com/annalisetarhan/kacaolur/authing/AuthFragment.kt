@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -33,20 +34,161 @@ class AuthFragment : Fragment() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var binding: AuthFragmentBinding
 
-    private var currentStage = 1
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.auth_fragment, container, false)
         Application.appComponent.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
 
-        setUpPhoneEditTexts()
         setUpButtons()
+        setUpPhoneEditTexts()
 
-        val currentStage = viewModel.selectStage()
-        goTo(currentStage)
+        setUpCurrentStageObserver()
+        setUpLoadingObserver()
+        setUpErrorMessageObserver()
 
         return binding.root
+    }
+
+    private fun setUpCurrentStageObserver() {
+        viewModel.currentStage.observe(viewLifecycleOwner,
+            Observer<Int> { t -> goTo(t) })
+    }
+
+    private fun setUpLoadingObserver() {
+        viewModel.loading.observe(viewLifecycleOwner,
+            Observer<Boolean> {
+                if (it) {
+                    binding.progressCircular.visibility = View.VISIBLE
+                } else {
+                    binding.progressCircular.visibility = View.GONE
+                }
+        })
+    }
+
+    private fun setUpErrorMessageObserver() {
+        viewModel.errorMessage.observe(viewLifecycleOwner,
+            Observer<String> {
+                if (it != "") {
+                    val toast = Toast.makeText(context, it, Toast.LENGTH_LONG)
+                    toast.setGravity(Gravity.BOTTOM, 0, 300)
+                    toast.show()
+                    viewModel.messageReceived()
+                }
+            })
+    }
+
+    /*
+     *      BUTTON SETUP
+     */
+
+    private fun setUpButtons() {
+        setUpStage1CenterButton()
+        setUpStage2LeftButton()
+        setUpStage2RightButton()
+        setUpStage3LeftButton()
+        setUpStage3RightButton()
+        setUpStage4CenterButton()
+        setUpStage56CenterButton()
+    }
+
+    private fun setUpStage1CenterButton() {
+        binding.stage1CenterButton.setOnClickListener {
+            val phoneNumber =
+                "5" + binding.phoneEdittext1.text.toString() + binding.phoneEdittext2.text.toString() + binding.phoneEdittext3.text.toString()
+            if (phoneNumber == "500") {         // FOR TESTING ONLY
+                viewModel.nukeData()
+                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
+                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
+                }
+            }
+            if (phoneNumberIsValid()) {
+                viewModel.savePhoneNumber(phoneNumber)
+            } else {
+                insistOnPhoneNumber()
+            }
+        }
+    }
+
+    private fun phoneNumberIsValid(): Boolean {
+        return binding.phoneEdittext1.text.length == 2
+                && binding.phoneEdittext2.text.length == 3
+                && binding.phoneEdittext3.text.length == 4
+    }
+
+    private fun insistOnPhoneNumber() {
+        val toast = Toast.makeText(context, "Please enter a valid phone number.", Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.BOTTOM, 0, 300)
+        toast.show()
+    }
+
+    private fun setUpStage2LeftButton() {
+        binding.stage2LeftButton.setOnClickListener {
+            viewModel.updateStage(1)
+        }
+    }
+
+    private fun setUpStage2RightButton() {
+        binding.stage2RightButton.setOnClickListener {
+            viewModel.updateStage(3)
+        }
+    }
+
+    private fun setUpStage3LeftButton() {
+        binding.stage3LeftButton.setOnClickListener {
+            viewModel.updateStage(1)
+        }
+    }
+
+    private fun setUpStage3RightButton() {
+        binding.stage3RightButton.setOnClickListener {
+            val code = binding.verificationCodeEdittext.text.toString()
+            if (code.length < 4) {
+                insistOnFourDigitCode()
+            } else {
+                viewModel.checkCode(code)
+            }
+        }
+    }
+
+    private fun insistOnFourDigitCode() {
+        val toast = Toast.makeText(context, "Please enter four digit code", Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.BOTTOM, 0, 300)
+        toast.show()
+    }
+
+    private fun setUpStage4CenterButton() {
+        binding.stage4CenterButton.setOnClickListener {
+            val username = binding.usernameEdittext.text.toString().trim()
+            // Testing-only code starts here
+            if (username == "0000") {
+                viewModel.nukeData()
+                binding.usernameEdittext.text.clear()
+                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
+                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
+                }
+            } else {
+                // Testing-only code ends here
+                if (username.length < 4) {
+                    insistOnLongerUsername()
+                } else {
+                    viewModel.tryToSaveUsername(username)
+                }
+            }
+        }
+    }
+
+    private fun insistOnLongerUsername() {
+        val toast = Toast.makeText(context, getString(R.string.choose_longer_username), Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.BOTTOM, 0, 300)
+        toast.show()
+    }
+
+    private fun setUpStage56CenterButton() {
+        binding.stage56CenterButton.setOnClickListener {
+            if (it.findNavController().currentDestination?.id == R.id.authFragment) {
+                findNavController().navigate(R.id.action_authFragment_to_orderFragment)
+            }
+        }
     }
 
     /*
@@ -65,7 +207,6 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage1() {
-        currentStage = 1
         hideEverything()
 
         showPhoneNumber()
@@ -78,7 +219,6 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage2() {
-        currentStage = 2
         hideEverything()
         showPhoneNumber()
         disablePhoneEditTexts()
@@ -93,7 +233,6 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage3() {
-        currentStage = 3
         hideEverything()
 
         binding.secondaryTextBlock.visibility = View.VISIBLE
@@ -105,7 +244,6 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage4() {
-        currentStage = 4
         hideEverything()
 
         binding.secondaryTextBlock.visibility = View.VISIBLE
@@ -117,25 +255,21 @@ class AuthFragment : Fragment() {
     }
 
     private fun goToStage5() {
-        currentStage = 5
         hideEverything()
 
         binding.secondaryTextBlock.visibility = View.VISIBLE
-        binding.secondaryTextBlock.text = getString(R.string.nice_to_meet_you, viewModel.username)
+        binding.secondaryTextBlock.text = getString(R.string.nice_to_meet_you, viewModel.getUsername())
 
         binding.stage56CenterButton.visibility = View.VISIBLE
-        viewModel.userIsLoggedIn()
     }
 
     private fun goToStage6() {
-        currentStage = 6
         hideEverything()
 
         binding.secondaryTextBlock.visibility = View.VISIBLE
-        binding.secondaryTextBlock.text = getString(R.string.welcome_back, viewModel.username)
+        binding.secondaryTextBlock.text = getString(R.string.welcome_back, viewModel.getUsername())
 
         binding.stage56CenterButton.visibility = View.VISIBLE
-        viewModel.userIsLoggedIn()
     }
 
     private fun hideEverything() {
@@ -375,128 +509,6 @@ class AuthFragment : Fragment() {
             2 -> binding.phoneEdittext3
             3 -> null
             else -> error("invalid editTextNum")
-        }
-    }
-
-    /*
-     *      BUTTON SETUP
-     */
-
-    private fun setUpButtons() {
-        setUpStage1CenterButton()
-        setUpStage2LeftButton()
-        setUpStage2RightButton()
-        setUpStage3LeftButton()
-        setUpStage3RightButton()
-        setUpStage4CenterButton()
-        setUpStage56CenterButton()
-    }
-
-    private fun setUpStage1CenterButton() {
-        binding.stage1CenterButton.setOnClickListener {
-            val phoneNumber =
-                "5" + binding.phoneEdittext1.text.toString() + binding.phoneEdittext2.text.toString() + binding.phoneEdittext3.text.toString()
-            if (phoneNumber == "500") {         // FOR TESTING ONLY
-                viewModel.nukeData()
-                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
-                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
-                }
-            }
-            if (phoneNumberIsValid()) {
-                viewModel.savePhoneNumber(phoneNumber)
-                goToStage2()
-            } else {
-                insistOnPhoneNumber()
-            }
-        }
-    }
-
-    private fun phoneNumberIsValid(): Boolean {
-        return binding.phoneEdittext1.text.length == 2 && binding.phoneEdittext2.text.length == 3 && binding.phoneEdittext3.text.length == 4
-    }
-
-    private fun insistOnPhoneNumber() {
-        val toast = Toast.makeText(context, "Please enter a valid phone number.", Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, 300)
-        toast.show()
-    }
-
-    private fun setUpStage2LeftButton() {
-        binding.stage2LeftButton.setOnClickListener {
-            goToStage1()
-        }
-    }
-
-    private fun setUpStage2RightButton() {
-        binding.stage2RightButton.setOnClickListener {
-            goToStage3()
-        }
-    }
-
-    private fun setUpStage3LeftButton() {
-        binding.stage3LeftButton.setOnClickListener {
-            goToStage1()
-        }
-    }
-
-    private fun setUpStage3RightButton() {
-        binding.stage3RightButton.setOnClickListener {
-            if (viewModel.codeIsValid(binding.verificationCodeEdittext.text.toString())) {
-                viewModel.validatePhoneNumber()
-                goTo(viewModel.selectStage())
-            } else {
-                insistOnCode()
-            }
-        }
-    }
-
-    private fun insistOnCode() {
-        val toast = Toast.makeText(context, getString(R.string.please_enter_code), Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, 300)
-        toast.show()
-    }
-
-    private fun setUpStage4CenterButton() {
-        binding.stage4CenterButton.setOnClickListener {
-            val username = binding.usernameEdittext.text.toString().trim()
-            // Testing-only code starts here
-            if (username == "0000") {
-                viewModel.nukeData()
-                binding.usernameEdittext.text.clear()
-                if (it.findNavController().currentDestination?.id == R.id.authFragment) {
-                    findNavController().navigate(R.id.action_authFragment_to_welcomeFragment)
-                }
-            } else {
-                // Testing-only code ends here
-                when {
-                    username.length < 4 -> insistOnLongerUsername()
-                    !viewModel.nameIsAvailable(username) -> insistOnAvailableUsername(username)
-                    else -> {
-                        viewModel.saveUsername(username)
-                        goToStage5()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun insistOnLongerUsername() {
-        val toast = Toast.makeText(context, getString(R.string.choose_longer_username), Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, 300)
-        toast.show()
-    }
-
-    private fun insistOnAvailableUsername(username: String) {
-        val toast = Toast.makeText(context, getString(R.string.sorry_username_taken, username), Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, 300)
-        toast.show()
-    }
-
-    private fun setUpStage56CenterButton() {
-        binding.stage56CenterButton.setOnClickListener {
-            if (it.findNavController().currentDestination?.id == R.id.authFragment) {
-                findNavController().navigate(R.id.action_authFragment_to_orderFragment)
-            }
         }
     }
 }

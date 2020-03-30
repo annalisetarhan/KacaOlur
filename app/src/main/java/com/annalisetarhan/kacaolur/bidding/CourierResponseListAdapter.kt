@@ -14,6 +14,7 @@ import com.annalisetarhan.kacaolur.databinding.ResponseListBidBinding
 import com.annalisetarhan.kacaolur.databinding.ResponseListQuestionBinding
 import java.lang.IllegalArgumentException
 
+// TODO: sealed class?
 const val BID = 1
 const val QUESTION = 2
 

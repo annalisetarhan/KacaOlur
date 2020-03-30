@@ -16,6 +16,7 @@ interface Storage {
 
 /*
 username : String
+user_id : String
 phone_number : String
 request_id : String
 order_id : String

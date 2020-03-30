@@ -7,6 +7,7 @@ import com.annalisetarhan.kacaolur.database.CourierResponseDao
 import com.annalisetarhan.kacaolur.database.asDomainModel
 import com.annalisetarhan.kacaolur.network.CourierResponseService
 import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +35,12 @@ class CourierResponseRepository @Inject constructor(
     @WorkerThread
     suspend fun acceptBid(bid: CourierResponse) {
         val requestId = sharedPrefs.getString("request_id") ?: error("request_id missing from SharedPrefs")
-        val orderId = courierResponseService.acceptBidAsync(requestId, bid.splitSecondsSinceOrderPlaced).await()
-        sharedPrefs.setString("order_id", orderId)
+        try {
+            val orderId =
+                courierResponseService.acceptBidAsync(requestId, bid.splitSecondsSinceOrderPlaced)
+            sharedPrefs.setString("order_id", orderId)
+        } catch (e: Exception) {
+            println("Error in CourierResponseRepository acceptBid(): $e")
+        }
     }
 }

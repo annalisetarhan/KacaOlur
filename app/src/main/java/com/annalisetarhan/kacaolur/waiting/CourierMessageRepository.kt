@@ -1,17 +1,11 @@
 package com.annalisetarhan.kacaolur.waiting
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.annalisetarhan.kacaolur.Application
-import com.annalisetarhan.kacaolur.R
 import com.annalisetarhan.kacaolur.database.CourierMessageDao
 import com.annalisetarhan.kacaolur.database.DatabaseCourierMessage
-import com.annalisetarhan.kacaolur.database.KacaOlurDatabase
 import com.annalisetarhan.kacaolur.database.asDomainModel
-import com.annalisetarhan.kacaolur.storage.SharedPreferencesStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 

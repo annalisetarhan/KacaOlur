@@ -13,7 +13,7 @@ class WelcomeViewModel @Inject constructor(
         val phoneNumber = sharedPrefs.getString("phone_number")
         val phoneNumberValidated = sharedPrefs.getBoolean("phone_number_validated")
         val username = sharedPrefs.getString("username")
-        val userId = sharedPrefs.getString("userId")
+        val userId = sharedPrefs.getString("user_id")
         userIsLoggedIn =
             (phoneNumber != null && phoneNumberValidated && username != null && userId != null)
     }
